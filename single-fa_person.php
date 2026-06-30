@@ -21,9 +21,10 @@ $current_state   = get_field('current_state',   $person_id);
 $current_zip     = get_field('current_zip',     $person_id);
 
 // Relationships
-$parents  = get_field('parents',  $person_id) ?: [];
-$spouses  = get_field('spouses',  $person_id) ?: [];
-$children = get_field('children', $person_id) ?: [];
+$parents         = get_field('parents',         $person_id) ?: [];
+$spouses         = get_field('spouses',         $person_id) ?: [];
+$former_spouses  = get_field('former_spouses',  $person_id) ?: [];
+$children        = get_field('children',        $person_id) ?: [];
 
 // Taxonomy
 $branches = get_the_terms($person_id, 'fa_branch') ?: [];
@@ -206,7 +207,7 @@ get_header();
                         <a href="<?php echo esc_url(get_term_link($branch)); ?>" class="fa-badge"><?php echo esc_html($branch->name); ?></a>
                     <?php endforeach; ?>
                     <?php if (!$is_living): ?>
-                        <span class="fa-badge fa-badge--muted">Deceased</span>
+                        <!-- <span class="fa-badge fa-badge--muted">Deceased</span> -->
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
@@ -350,7 +351,7 @@ get_header();
 
 
         <!-- Sidebar — relationships -->
-        <?php $has_rels = $parents || $spouses || $children; ?>
+        <?php $has_rels = $parents || $spouses || $former_spouses || $children; ?>
         <?php if ($has_rels): ?>
             <aside class="fa-profile-sidebar" aria-labelledby="fa-rels-heading">
                 <div class="fa-card">
@@ -367,6 +368,13 @@ get_header();
                         <div class="fa-rels-group">
                             <h3 class="fa-rels-label"><?php echo count($spouses) === 1 ? 'Spouse' : 'Spouses'; ?></h3>
                             <?php foreach ($spouses as $p): echo fa_p_person_card($p); endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($former_spouses): ?>
+                        <div class="fa-rels-group">
+                            <h3 class="fa-rels-label"><?php echo count($former_spouses) === 1 ? 'Former spouse' : 'Former spouses'; ?></h3>
+                            <?php foreach ($former_spouses as $p): echo fa_p_person_card($p); endforeach; ?>
                         </div>
                     <?php endif; ?>
 

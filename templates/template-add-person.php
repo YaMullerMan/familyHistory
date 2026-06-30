@@ -91,6 +91,14 @@ get_header();
                                 <span class="fa-toggle__slider"></span>
                             </label>
                             <span class="fa-toggle-label">Immigrated</span>
+
+                            <span class="fa-toggle-divider" aria-hidden="true"></span>
+
+                            <label class="fa-toggle">
+                                <input type="checkbox" id="is_divorced" name="is_divorced">
+                                <span class="fa-toggle__slider"></span>
+                            </label>
+                            <span class="fa-toggle-label">Remarried</span>
                         </div>
                     </div>
                 </div>
@@ -127,7 +135,7 @@ get_header();
                             <input class="fa-input" type="date" id="death_date" name="death_date">
                         </div>
                         <div class="fa-field">
-                            <label class="fa-label">Death location</label>
+                            <label class="fa-label">Burial location</label>
                             <div id="death-location-picker"></div>
                         </div>
                     </div>
@@ -183,6 +191,10 @@ get_header();
                     <div class="fa-field">
                         <label class="fa-label">Spouse(s)</label>
                         <div id="spouses-picker"></div>
+                    </div>
+                    <div class="fa-field" id="former-spouses-field" hidden>
+                        <label class="fa-label">Former spouse(s)</label>
+                        <div id="former-spouses-picker"></div>
                     </div>
                     <div class="fa-field">
                         <label class="fa-label">Children</label>

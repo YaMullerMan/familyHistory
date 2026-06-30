@@ -117,18 +117,6 @@
             if (!spouse) return;
             appendSep(card);
             card.appendChild(makePersonLink(spouse));
-
-            // Re-marriage: check if this spouse has other partners not yet in the card
-            (spouse.acf?.spouses || [])
-                .filter(id => inArchive.has(id) && !rendered.has(id) && !coupleIds.has(id))
-                .forEach(id => {
-                    coupleIds.add(id);
-                    rendered.add(id);
-                    const partner = byId[id];
-                    if (!partner) return;
-                    appendSep(card);
-                    card.appendChild(makePersonLink(partner));
-                });
         });
 
         li.appendChild(card);

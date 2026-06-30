@@ -8,7 +8,7 @@
     let existingPhotoId = null;
 
     // Previous relationship IDs captured during prefill; used to diff on save
-    let prevRelationships = { parents: [], children: [], spouses: [] };
+    let prevRelationships = { parents: [], children: [], spouses: [], former_spouses: [] };
 
     // ----------------------------------------------------------------
     // Relationship pickers
@@ -42,6 +42,10 @@
         document.getElementById('spouses-picker'),
         { postType: 'fa_person', placeholder: 'Search people…', clearOnBlur: true }
     );
+    const formerSpousesPicker = new RelationshipPicker(
+        document.getElementById('former-spouses-picker'),
+        { postType: 'fa_person', placeholder: 'Search people…', clearOnBlur: true }
+    );
     const childrenPicker = new RelationshipPicker(
         document.getElementById('children-picker'),
         { postType: 'fa_person', placeholder: 'Search people…', clearOnBlur: true }
@@ -68,8 +72,10 @@
     const isLivingCheckbox   = document.getElementById('is_living');
     const deathSection       = document.getElementById('death-section');
     const isLivingLabel      = document.getElementById('is_living_label');
-    const isImmigrantCheckbox = document.getElementById('is_immigrant');
-    const immigrationSection  = document.getElementById('immigration-section');
+    const isImmigrantCheckbox  = document.getElementById('is_immigrant');
+    const immigrationSection   = document.getElementById('immigration-section');
+    const isDivorcedCheckbox   = document.getElementById('is_divorced');
+    const formerSpousesField   = document.getElementById('former-spouses-field');
 
     function syncLivingState() {
         const living = isLivingCheckbox.checked;
@@ -84,6 +90,12 @@
     }
     isImmigrantCheckbox.addEventListener('change', syncImmigrantState);
     syncImmigrantState();
+
+    function syncDivorcedState() {
+        formerSpousesField.hidden = !isDivorcedCheckbox.checked;
+    }
+    isDivorcedCheckbox.addEventListener('change', syncDivorcedState);
+    syncDivorcedState();
 
     // ----------------------------------------------------------------
     // Load existing family branches for datalist
@@ -120,6 +132,7 @@
                         maiden_name:     document.getElementById('maiden_name').value.trim(),
                         is_living:       isLivingCheckbox.checked,
                         is_immigrant:    isImmigrantCheckbox.checked,
+                        is_divorced:     isDivorcedCheckbox.checked,
                         birth_date:      document.getElementById('birth_date').value,
                         birth_location:        birthLocPicker.getValues(),
                         immigration_location:  immigrationLocPicker.getValues(),
@@ -139,12 +152,14 @@
                 label: 'Relationships',
                 collect() {
                     return {
-                        parents:         parentsPicker.getValues(),
-                        spouses:         spousesPicker.getValues(),
-                        children:        childrenPicker.getValues(),
-                        _parentsLabels:  parentsPicker.getSelected(),
-                        _spousesLabels:  spousesPicker.getSelected(),
-                        _childrenLabels: childrenPicker.getSelected(),
+                        parents:              parentsPicker.getValues(),
+                        spouses:              spousesPicker.getValues(),
+                        former_spouses:       formerSpousesPicker.getValues(),
+                        children:             childrenPicker.getValues(),
+                        _parentsLabels:       parentsPicker.getSelected(),
+                        _spousesLabels:       spousesPicker.getSelected(),
+                        _formerSpousesLabels: formerSpousesPicker.getSelected(),
+                        _childrenLabels:      childrenPicker.getSelected(),
                     };
                 },
             },
@@ -207,13 +222,14 @@
             const acf    = person.acf || {};
 
             // Fetch related post titles in parallel
-            const [birthLocs, deathLocs, immigLocs, parents, spouses, children] =
+            const [birthLocs, deathLocs, immigLocs, parents, spouses, formerSpouses, children] =
                 await Promise.all([
                     fetchTitles('location', acf.birth_location        || []),
                     fetchTitles('location', acf.death_location        || []),
                     fetchTitles('location', acf.immigration_location  || []),
                     fetchTitles('person',   acf.parents               || []),
                     fetchTitles('person',   acf.spouses               || []),
+                    fetchTitles('person',   acf.former_spouses        || []),
                     fetchTitles('person',   acf.children              || []),
                 ]);
 
@@ -248,10 +264,15 @@
 
             // Capture previous relationship IDs for bidirectional sync on save
             prevRelationships = {
-                parents:  (acf.parents  || []).map(Number),
-                children: (acf.children || []).map(Number),
-                spouses:  (acf.spouses  || []).map(Number),
+                parents:        (acf.parents        || []).map(Number),
+                children:       (acf.children       || []).map(Number),
+                spouses:        (acf.spouses        || []).map(Number),
+                former_spouses: (acf.former_spouses || []).map(Number),
             };
+
+            // Toggles
+            isDivorcedCheckbox.checked = !!acf.is_divorced;
+            syncDivorcedState();
 
             // Relationship pickers
             birthLocPicker.setValues(birthLocs);
@@ -259,6 +280,7 @@
             immigrationLocPicker.setValues(immigLocs);
             parentsPicker.setValues(parents);
             spousesPicker.setValues(spouses);
+            formerSpousesPicker.setValues(formerSpouses);
             childrenPicker.setValues(children);
 
             // Profile photo
@@ -302,9 +324,10 @@
             { label: 'Birthplace',     value: data._birthLocLabels?.[0]?.title || null },
             { label: 'Immigrated from', value: data._immigrationLocLabels?.[0]?.title || null },
             { label: 'Died',           value: !data.is_living ? fmtDate(data.death_date) : null },
-            { label: 'Death location', value: !data.is_living ? (data._deathLocLabels?.[0]?.title || null) : null },
+            { label: 'Burial location', value: !data.is_living ? (data._deathLocLabels?.[0]?.title || null) : null },
             { label: 'Parents',        value: data._parentsLabels?.length  ? data._parentsLabels.map(p => p.title).join(', ')  : null },
-            { label: 'Spouses',        value: data._spousesLabels?.length  ? data._spousesLabels.map(p => p.title).join(', ')  : null },
+            { label: 'Spouses',        value: data._spousesLabels?.length       ? data._spousesLabels.map(p => p.title).join(', ')       : null },
+            { label: 'Former spouses', value: data._formerSpousesLabels?.length ? data._formerSpousesLabels.map(p => p.title).join(', ') : null },
             { label: 'Children',       value: data._childrenLabels?.length ? data._childrenLabels.map(p => p.title).join(', ') : null },
             { label: 'Family branch',  value: data.family_branch || null },
             {
@@ -434,14 +457,16 @@
             maiden_name:          data.maiden_name           || '',
             is_living:            data.is_living    ? 1 : 0,
             is_immigrant:         data.is_immigrant ? 1 : 0,
+            is_divorced:          data.is_divorced  ? 1 : 0,
             birth_date:           data.birth_date            || '',
             birth_location:       data.birth_location        || [],
             immigration_location: data.immigration_location  || [],
             death_date:           data.death_date            || '',
             death_location:       data.death_location        || [],
-            parents:              mergeIds(prevRelationships.parents,  data.parents),
-            spouses:              mergeIds(prevRelationships.spouses,  data.spouses),
-            children:             mergeIds(prevRelationships.children, data.children),
+            parents:              mergeIds(prevRelationships.parents,        data.parents),
+            spouses:              mergeIds(prevRelationships.spouses,        data.spouses),
+            former_spouses:       mergeIds(prevRelationships.former_spouses, data.former_spouses),
+            children:             mergeIds(prevRelationships.children,       data.children),
             bio:                  data.bio                   || '',
             profile_photo:        data.profile_photo         || existingPhotoId || '',
             current_address:      data.current_address       || '',
@@ -459,8 +484,8 @@
         // Write reverse relationship links on all affected people
         await syncRelationships(
             result.id,
-            { parents: acfFields.parents, children: acfFields.children, spouses: acfFields.spouses },
-            isEditing ? prevRelationships : { parents: [], children: [], spouses: [] }
+            { parents: acfFields.parents, children: acfFields.children, spouses: acfFields.spouses, former_spouses: acfFields.former_spouses },
+            isEditing ? prevRelationships : { parents: [], children: [], spouses: [], former_spouses: [] }
         );
 
         document.getElementById('fa-form-nav').hidden = true;
@@ -490,10 +515,11 @@
     async function syncRelationships(personId, next, prev) {
         const id = Number(personId);
 
-        const nextParents  = next.parents.map(Number);
-        const nextChildren = next.children.map(Number);
-        const nextSpouses  = next.spouses.map(Number);
-        const removed = field => prev[field].filter(x => !next[field].map(Number).includes(x));
+        const nextParents        = next.parents.map(Number);
+        const nextChildren       = next.children.map(Number);
+        const nextSpouses        = next.spouses.map(Number);
+        const nextFormerSpouses  = next.former_spouses.map(Number);
+        const removed = field => (prev[field] || []).filter(x => !(next[field] || []).map(Number).includes(x));
 
         const tasks = [];
 
@@ -520,6 +546,10 @@
         // Ensure ALL current spouses have this person in their spouses
         nextSpouses.forEach(sid  => tasks.push(patch(sid, 'spouses', id, undefined)));
         removed('spouses').forEach(sid => tasks.push(patch(sid, 'spouses', undefined, id)));
+
+        // Ensure ALL current former spouses have this person in their former_spouses
+        nextFormerSpouses.forEach(sid  => tasks.push(patch(sid, 'former_spouses', id, undefined)));
+        removed('former_spouses').forEach(sid => tasks.push(patch(sid, 'former_spouses', undefined, id)));
 
         await Promise.all(tasks);
     }

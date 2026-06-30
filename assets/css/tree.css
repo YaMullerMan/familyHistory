@@ -290,6 +290,9 @@ ul.fa-tree.fa-tree--root > li > .fa-tree-card::before {
     color: var(--color-primary);
     text-decoration: none;
 }
+.fa-tree-person:hover.fa-tree-person--deceased .fa-tree-person__name {
+    color: var(--text-primary);
+}
 .fa-tree-person--deceased .fa-tree-person__name {
     color: var(--text-muted);
 }

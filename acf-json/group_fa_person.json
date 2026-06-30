@@ -55,6 +55,17 @@
             "wrapper": {"width": "20", "class": "", "id": ""}
         },
         {
+            "key": "field_fa_per_is_divorced",
+            "label": "Is remarried",
+            "name": "is_divorced",
+            "type": "true_false",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Yes",
+            "ui_off_text": "No",
+            "wrapper": {"width": "20", "class": "", "id": ""}
+        },
+        {
             "key": "field_fa_per_birth_date",
             "label": "Birth date",
             "name": "birth_date",
@@ -89,7 +100,7 @@
         },
         {
             "key": "field_fa_per_death_location",
-            "label": "Death location",
+            "label": "Burial location",
             "name": "death_location",
             "type": "relationship",
             "post_type": ["fa_location"],
@@ -138,6 +149,19 @@
             "key": "field_fa_per_spouses",
             "label": "Spouses",
             "name": "spouses",
+            "type": "relationship",
+            "post_type": ["fa_person"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "wrapper": {"width": "33", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_former_spouses",
+            "label": "Former spouses",
+            "name": "former_spouses",
             "type": "relationship",
             "post_type": ["fa_person"],
             "taxonomy": [],
