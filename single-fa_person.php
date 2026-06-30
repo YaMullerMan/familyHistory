@@ -55,9 +55,13 @@ $events = new WP_Query([
 $stories = new WP_Query([
     'post_type'      => 'fa_story',
     'posts_per_page' => 10,
-    'meta_query'     => [['key' => 'people_featured', 'value' => $id_val, 'compare' => 'LIKE']],
-    'orderby'        => 'date',
-    'order'          => 'DESC',
+    'meta_query'     => [
+        'relation' => 'OR',
+        ['key' => 'people_featured', 'value' => $id_val, 'compare' => 'LIKE'],
+        ['key' => 'author_person',   'value' => $id_val, 'compare' => 'LIKE'],
+    ],
+    'orderby' => 'date',
+    'order'   => 'DESC',
 ]);
 
 $media_q = new WP_Query([

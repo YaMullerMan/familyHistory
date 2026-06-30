@@ -1,6 +1,6 @@
 <?php
 
-define('FA_VERSION', '1.1.2');
+define('FA_VERSION', '1.1.3');
 
 // ---------------------------------------------------------------------------
 // Theme setup
@@ -42,8 +42,11 @@ function fa_enqueue() {
         wp_enqueue_script('fa-tree', $uri . '/assets/js/tree.js',    ['fa-api'],  FA_VERSION, true);
     }
 
-    if (is_page_template('templates/template-media.php')) {
+    if (is_page_template('templates/template-media.php') || is_singular('fa_media')) {
         wp_enqueue_style('fa-media',  $uri . '/assets/css/media.css',  ['fa-main'], FA_VERSION);
+    }
+
+    if (is_page_template('templates/template-media.php')) {
         wp_enqueue_script('fa-media', $uri . '/assets/js/media.js',    ['fa-api'],  FA_VERSION, true);
     }
 

@@ -46,7 +46,7 @@
             const name      = personName(p);
             const maiden    = acf.maiden_name ? `<span class="fa-person-row__maiden">née ${esc(acf.maiden_name)}</span>` : '';
             const yrs       = years(p);
-            const deceased  = !acf.is_living ? ' fa-person-row--deceased' : '';
+            const deceased  = acf.is_living === 0 || acf.is_living === false ? ' fa-person-row--deceased' : '';
             const thumb     = acf.profile_photo?.sizes?.thumbnail || acf.profile_photo?.url || null;
             const avatarInner = thumb
                 ? `<img src="${esc(thumb)}" alt="">`
@@ -64,7 +64,7 @@
                 </li>`;
         }).join('');
 
-        return `<div class="fa-alpha-section"><ul class="fa-person-list">${rows}</ul></div>`;
+        return `<ul class="fa-person-list">${rows}</ul>`;
     }
 
     // ── Search ────────────────────────────────────────────────────────────────

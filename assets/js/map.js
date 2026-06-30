@@ -43,33 +43,33 @@
     const locById = {};
     (locations || []).forEach(loc => { locById[loc.id] = loc; });
 
-    // ── Auto-geocode locations that are missing coordinates ───────────────────
-    // Happens the first time a new location appears on the map; coords are
-    // saved back to the post so Nominatim is only called once per location.
-    const needsGeocode = Object.values(locById).filter(
-        l => !(l.acf?.lat && l.acf?.lng) && (l.acf?.city || l.acf?.address)
-    );
-    for (const loc of needsGeocode) {
-        const a = loc.acf || {};
-        const parts = [a.address, a.city, a.state_province, a.country].filter(Boolean);
-        try {
-            const q    = encodeURIComponent(parts.join(', '));
-            const res  = await fetch(
-                `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${q}`,
-                { headers: { 'Accept-Language': 'en-US' } }
-            );
-            const data = await res.json();
-            if (data.length) {
-                const lat = parseFloat(data[0].lat);
-                const lng = parseFloat(data[0].lon);
-                loc.acf   = { ...loc.acf, lat, lng };
-                // Save back so this only runs once
-                FA.post(`wp/v2/fa_location/${loc.id}`, { acf: { lat, lng } }).catch(() => {});
-            }
-        } catch (_) { /* non-critical */ }
-        // Nominatim rate limit: 1 req/sec
-        await new Promise(r => setTimeout(r, 1100));
-    }
+    // ── Auto-geocode location posts that are missing coordinates ─────────────
+    // Runs in the background — doesn't block map render.
+    (async function geocodeLocations() {
+        const needsGeocode = Object.values(locById).filter(
+            l => !(l.acf?.lat && l.acf?.lng) && (l.acf?.city || l.acf?.address)
+        );
+        for (const loc of needsGeocode) {
+            const a = loc.acf || {};
+            const parts = [a.address, a.city, a.state_province, a.country].filter(Boolean);
+            if (!parts.length) continue;
+            try {
+                const q   = encodeURIComponent(parts.join(', '));
+                const res = await fetch(
+                    `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${q}`,
+                    { headers: { 'Accept-Language': 'en-US' } }
+                );
+                const data = await res.json();
+                if (data.length) {
+                    const lat = parseFloat(data[0].lat);
+                    const lng = parseFloat(data[0].lon);
+                    loc.acf   = { ...loc.acf, lat, lng };
+                    FA.post(`wp/v2/fa_location/${loc.id}`, { acf: { lat, lng } }).catch(() => {});
+                }
+            } catch (_) { /* non-critical */ }
+            await new Promise(r => setTimeout(r, 1100));
+        }
+    }());
 
     // ── Plot markers ──────────────────────────────────────────────────────────
     // Which types are visible on initial load (driven by PHP template)
@@ -79,7 +79,22 @@
     );
 
     const markersByType = { birthplace: [], residence: [], immigration: [] };
-    const bounds        = []; // tracked only to detect if any pins were plotted
+    const bounds        = [];
+
+    function addResidenceMarker(person, lat, lng) {
+        const acf   = person.acf || {};
+        const name  = esc(person.title?.rendered || '');
+        const href  = esc(person.link || '#');
+        const place = [acf.current_city, acf.current_state].filter(Boolean).map(esc).join(', ');
+        const ll    = [lat, lng];
+        const marker = makeMarker(ll, 'residence');
+        marker.bindPopup(popup('Residence', TYPES.residence.color, name, place, href, 'View profile →'),
+            { maxWidth: 240, className: 'fa-leaflet-popup' });
+        if (activeOnLoad.has('residence')) marker.addTo(map);
+        markersByType.residence.push(marker);
+        bounds.push(ll);
+        if (empty.hidden === false) empty.hidden = true;
+    }
 
     (people || []).forEach(person => {
         const acf  = person.acf || {};
@@ -94,7 +109,6 @@
                 const ll    = [parseFloat(loc.acf.lat), parseFloat(loc.acf.lng)];
                 const place = [loc.acf.city, loc.acf.state_province]
                     .filter(Boolean).map(esc).join(', ');
-
                 const marker = makeMarker(ll, 'birthplace');
                 marker.bindPopup(popup('Birthplace', TYPES.birthplace.color, name, place, href, 'View profile →'),
                     { maxWidth: 240, className: 'fa-leaflet-popup' });
@@ -112,7 +126,6 @@
                 const ll    = [parseFloat(loc.acf.lat), parseFloat(loc.acf.lng)];
                 const place = [loc.acf.city, loc.acf.state_province, loc.acf.country]
                     .filter(Boolean).map(esc).join(', ');
-
                 const marker = makeMarker(ll, 'immigration');
                 marker.bindPopup(popup('Immigration', TYPES.immigration.color, name, place, href, 'View profile →'),
                     { maxWidth: 240, className: 'fa-leaflet-popup' });
@@ -122,24 +135,62 @@
             }
         }
 
-        // ── Residence pin ──────────────────────────────────────────────────
-        if (acf.current_lat && acf.current_lng) {
-            const ll    = [parseFloat(acf.current_lat), parseFloat(acf.current_lng)];
-            const place = [acf.current_city, acf.current_state]
-                .filter(Boolean).map(esc).join(', ');
-
-            const marker = makeMarker(ll, 'residence');
-            marker.bindPopup(popup('Residence', TYPES.residence.color, name, place, href, 'View profile →'),
-                { maxWidth: 240, className: 'fa-leaflet-popup' });
-            if (activeOnLoad.has('residence')) marker.addTo(map);
-            markersByType.residence.push(marker);
-            bounds.push(ll);
+        // ── Residence pin — plot immediately if coords already saved ───────
+        const lat = parseFloat(acf.current_lat);
+        const lng = parseFloat(acf.current_lng);
+        if (lat && lng) {
+            addResidenceMarker(person, lat, lng);
         }
     });
 
     if (!bounds.length) {
         empty.hidden = false;
     }
+
+    // ── Geocode missing residence coordinates in the background ───────────────
+    // People who have an address but no stored coordinates get geocoded once;
+    // their pin appears as soon as Nominatim responds, and coords are saved back.
+    (async function geocodeResidences() {
+        const needsGeocode = (people || []).filter(
+            p => !(parseFloat(p.acf?.current_lat) && parseFloat(p.acf?.current_lng)) &&
+                 (p.acf?.current_city || p.acf?.current_address)
+        );
+        for (const person of needsGeocode) {
+            const a     = person.acf || {};
+            const parts = [a.current_address, a.current_city, a.current_state, a.current_zip]
+                .filter(Boolean);
+            if (!parts.length) continue;
+            try {
+                const nominatim = async q => {
+                    const r = await fetch(
+                        `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&q=${encodeURIComponent(q)}`,
+                        { headers: { 'Accept-Language': 'en-US' } }
+                    );
+                    return r.json();
+                };
+
+                let geo = await nominatim(parts.join(', '));
+
+                // Street-level geocoding often fails without a state; retry city-only
+                if (!geo.length) {
+                    const cityParts = [a.current_city, a.current_state, a.current_zip].filter(Boolean);
+                    if (cityParts.length) {
+                        await new Promise(r => setTimeout(r, 1100));
+                        geo = await nominatim(cityParts.join(', '));
+                    }
+                }
+
+                if (geo.length) {
+                    const lat = parseFloat(geo[0].lat);
+                    const lng = parseFloat(geo[0].lon);
+                    addResidenceMarker(person, lat, lng);
+                    FA.post(`wp/v2/fa_person/${person.id}`,
+                        { acf: { current_lat: lat, current_lng: lng } }).catch(() => {});
+                }
+            } catch (_) { /* non-critical */ }
+            await new Promise(r => setTimeout(r, 1100));
+        }
+    }());
 
     // ── Filter buttons ────────────────────────────────────────────────────────
     document.querySelectorAll('[data-filter]').forEach(btn => {
