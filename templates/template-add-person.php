@@ -173,7 +173,7 @@ get_header();
         <div class="fa-step-panel" data-step="1" hidden>
             <div class="fa-card">
                 <h2 class="fa-form-section-title">Relationships</h2>
-                <p class="fa-form-hint">Only links to people already in the archive. If someone isn't added yet, skip them — add them individually first, then come back to connect them.</p>
+                <p class="fa-form-hint"><b>This only links to people already in the archive.</b><br>If someone isn't added yet, skip them for now. Then create their profile and set the relationship from there.</p>
 
                 <div class="fa-form-field-group">
                     <div class="fa-field">
