@@ -1,0 +1,437 @@
+/* ============================================================
+   Shared multi-step form styles
+   ============================================================ */
+
+.fa-form-page-header {
+    margin-bottom: 1.5rem;
+}
+.fa-form-page-header h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+.fa-form-page-header p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* ============================================================
+   Stepper
+   ============================================================ */
+.fa-stepper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+}
+
+.fa-stepper__step {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+    opacity: 0.4;
+    transition: opacity var(--transition);
+}
+.fa-stepper__step--active { opacity: 1; }
+.fa-stepper__step--done   { opacity: 0.65; }
+
+.fa-stepper__num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--surface-1);
+    border: 0.5px solid var(--border-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.fa-stepper__step--active .fa-stepper__num {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+.fa-stepper__step--done .fa-stepper__num {
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    border-color: var(--color-primary-light);
+}
+
+.fa-stepper__label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+.fa-stepper__step--active .fa-stepper__label { color: var(--text-primary); }
+
+.fa-stepper__connector {
+    flex: 1;
+    height: 0.5px;
+    background: var(--border-strong);
+    min-width: 1rem;
+    margin-inline: 0.5rem;
+}
+
+/* ============================================================
+   Step panels
+   ============================================================ */
+.fa-step-panel[hidden] { display: none; }
+
+/* ============================================================
+   Form card layout
+   ============================================================ */
+.fa-form-section-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+.fa-form-sub-title {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+.fa-form-hint {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+.fa-form-divider {
+    border: none;
+    border-top: 0.5px solid var(--border);
+    margin: 1.25rem 0;
+}
+.fa-form-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.fa-required {
+    color: #dc2626;
+    font-size: 0.9em;
+}
+.fa-field-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Field rows — CSS grid */
+.fa-form-row {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+.fa-form-row:last-child { margin-bottom: 0; }
+.fa-form-row--2 { grid-template-columns: 1fr 1fr; }
+.fa-form-row--3 { grid-template-columns: 1fr 1fr 1fr; }
+.fa-form-row--4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+@media (max-width: 720px) {
+    .fa-form-row--4 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+    .fa-form-row--2,
+    .fa-form-row--3,
+    .fa-form-row--4 { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   Toggle switch (is_living)
+   ============================================================ */
+.fa-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-top: 0.25rem;
+}
+
+.fa-toggle {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+}
+.fa-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+.fa-toggle__slider {
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    background: var(--surface-1);
+    border: 0.5px solid var(--border-strong);
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition);
+}
+.fa-toggle__slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    top: 2px;
+    left: 2px;
+    transition: transform var(--transition), background var(--transition);
+}
+.fa-toggle input:checked + .fa-toggle__slider {
+    background: var(--color-primary-light);
+    border-color: var(--color-primary);
+}
+.fa-toggle input:checked + .fa-toggle__slider::before {
+    background: var(--color-primary);
+    transform: translateX(18px);
+}
+.fa-toggle input:focus-visible + .fa-toggle__slider {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.fa-toggle-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    user-select: none;
+}
+
+/* ============================================================
+   Relationship picker
+   ============================================================ */
+.fa-picker {
+    position: relative;
+}
+
+.fa-picker__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.4rem;
+}
+
+.fa-picker__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.5rem 0.2rem 0.6rem;
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    border-radius: 100px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.fa-picker__tag-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    line-height: 1;
+    color: var(--color-primary-dark);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity var(--transition);
+}
+.fa-picker__tag-remove:hover { opacity: 1; }
+
+.fa-picker__dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--surface-2);
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius-card);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+    z-index: 50;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0.3rem;
+}
+.fa-picker__dropdown[hidden] { display: none; }
+
+.fa-picker__result,
+.fa-picker__empty {
+    padding: 0.45rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    list-style: none;
+}
+.fa-picker__result:hover { background: var(--surface-1); }
+.fa-picker__empty {
+    color: var(--text-muted);
+    cursor: default;
+    font-style: italic;
+}
+
+/* ============================================================
+   Drag-and-drop file upload
+   ============================================================ */
+.fa-dropzone {
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius-card);
+    background: var(--surface-1);
+    transition: border-color var(--transition), background var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.fa-dropzone--over {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+}
+
+.fa-dropzone__inner {
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.fa-dropzone__label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+.fa-dropzone__browse {
+    color: var(--color-primary);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.fa-dropzone__hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.fa-dropzone__preview {
+    position: relative;
+    max-width: 240px;
+    margin: 1.25rem auto;
+}
+.fa-dropzone__preview[hidden] { display: none; }
+
+.fa-dropzone__preview-img {
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+}
+
+.fa-dropzone__remove {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    border: none;
+    transition: background var(--transition);
+}
+.fa-dropzone__remove:hover { background: rgba(0,0,0,0.75); }
+
+.fa-dropzone__uploading {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+.fa-dropzone__uploading[hidden] { display: none; }
+
+/* ============================================================
+   Review summary
+   ============================================================ */
+.fa-review__row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 0.5rem;
+    padding: 0.55rem 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 0.875rem;
+}
+.fa-review__row:last-child { border-bottom: none; }
+
+.fa-review__label {
+    color: var(--text-muted);
+    font-weight: 500;
+    padding-top: 0.05rem;
+}
+
+.fa-review__value {
+    color: var(--text-primary);
+}
+
+.fa-review__photo {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius);
+    object-fit: cover;
+}
+
+/* ============================================================
+   Form navigation bar
+   ============================================================ */
+.fa-form-nav {
+    position: sticky;
+    bottom: 0;
+    background: var(--surface-2);
+    border-top: 0.5px solid var(--border-strong);
+    padding: 0.875rem var(--page-pad);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.25rem;
+    z-index: 10;
+}
+.fa-form-nav[hidden] { display: none; }
+
+.fa-form-nav__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+}
+
+.fa-step-counter {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.fa-btn--lg {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9375rem;
+}

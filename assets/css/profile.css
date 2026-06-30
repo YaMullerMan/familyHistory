@@ -1,0 +1,380 @@
+/* ============================================================
+   Person profile page
+   ============================================================ */
+
+/* ---- Hero card ---- */
+.fa-profile-hero {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+/* Photo */
+.fa-profile-photo {
+    flex-shrink: 0;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.5px solid var(--border-strong);
+    background: var(--surface-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fa-profile-photo__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.fa-profile-photo__initials {
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    user-select: none;
+}
+
+/* Info */
+.fa-profile-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.fa-profile-name {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.fa-profile-maiden {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.fa-profile-dates {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.fa-profile-date-label {
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: 0.2rem;
+}
+
+.fa-profile-date-sep {
+    color: var(--text-muted);
+}
+
+.fa-profile-date-location {
+    color: var(--text-muted);
+}
+.fa-profile-date-location a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.fa-profile-age {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.fa-profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.1rem;
+}
+
+.fa-badge--muted {
+    background: var(--surface-1);
+    color: var(--text-muted);
+}
+
+/* Edit button */
+.fa-profile-actions {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* ---- Body layout ---- */
+.fa-profile-body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+@media (max-width: 840px) {
+    .fa-profile-body {
+        grid-template-columns: 1fr;
+    }
+    .fa-profile-sidebar { order: -1; }
+}
+
+/* ---- Section ---- */
+.fa-profile-section {
+    margin-bottom: 1.5rem;
+}
+.fa-profile-section:last-child { margin-bottom: 0; }
+
+.fa-profile-section__title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid var(--border);
+}
+
+/* ---- Bio ---- */
+.fa-profile-bio {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+}
+.fa-profile-bio p { margin-bottom: 0.75em; }
+.fa-profile-bio p:last-child { margin-bottom: 0; }
+
+/* ---- Timeline ---- */
+.fa-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    list-style: none;
+    padding-left: 1rem;
+    border-left: 1.5px solid var(--border-strong);
+}
+
+.fa-timeline__item {
+    position: relative;
+    padding: 0 0 1rem 1.25rem;
+}
+.fa-timeline__item:last-child { padding-bottom: 0; }
+
+.fa-timeline__dot {
+    position: absolute;
+    left: -0.45rem;
+    top: 0.3rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    border: 2px solid var(--surface-0);
+}
+
+.fa-timeline__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+    flex-wrap: wrap;
+}
+
+.fa-timeline__date {
+    font-size: 0.775rem;
+    color: var(--text-muted);
+}
+
+.fa-timeline__title {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+.fa-timeline__title:hover { color: var(--color-primary); }
+
+.fa-timeline__location {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.775rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+.fa-timeline__location a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* ---- Stories ---- */
+.fa-story-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.fa-story-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.65rem 0;
+    border-bottom: 0.5px solid var(--border);
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: color var(--transition);
+}
+.fa-story-card:last-child { border-bottom: none; }
+.fa-story-card:hover { color: var(--color-primary); text-decoration: none; }
+.fa-story-card:hover .fa-story-card__arrow { opacity: 1; }
+
+.fa-story-card__title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0;
+}
+.fa-story-card__date {
+    font-size: 0.775rem;
+    color: var(--text-muted);
+    display: block;
+    margin-top: 0.1rem;
+}
+.fa-story-card__arrow {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    opacity: 0.4;
+    transition: opacity var(--transition);
+}
+
+/* ---- Media grid ---- */
+.fa-media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 0.5rem;
+}
+
+.fa-media-thumb {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--surface-1);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0.5px solid var(--border);
+    text-decoration: none;
+    transition: opacity var(--transition);
+}
+.fa-media-thumb:hover { opacity: 0.85; }
+
+.fa-media-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fa-media-thumb__icon { color: var(--text-muted); }
+
+.fa-media-thumb__circa {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.3rem;
+    text-align: center;
+    line-height: 1.3;
+}
+
+/* ---- Sidebar relationships ---- */
+.fa-profile-sidebar .fa-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.fa-rels-group {
+    padding: 0.75rem 0;
+    border-bottom: 0.5px solid var(--border);
+}
+.fa-rels-group:first-of-type { padding-top: 0; }
+.fa-rels-group:last-child { border-bottom: none; padding-bottom: 0; }
+
+.fa-rels-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+/* Person mini-card */
+.fa-person-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: color var(--transition);
+}
+.fa-person-card + .fa-person-card {
+    border-top: 0.5px solid var(--border);
+}
+.fa-person-card:hover { color: var(--color-primary); text-decoration: none; }
+
+.fa-person-card__photo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.5px solid var(--border-strong);
+    background: var(--surface-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.fa-person-card__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.fa-person-card__initials {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.fa-person-card__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.fa-person-card__name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.fa-person-card__years {
+    font-size: 0.725rem;
+    color: var(--text-muted);
+}

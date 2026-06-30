@@ -1,0 +1,106 @@
+{
+    "key": "group_fa_event",
+    "title": "Event fields",
+    "fields": [
+        {
+            "key": "field_fa_evt_date",
+            "label": "Event date",
+            "name": "event_date",
+            "type": "date_picker",
+            "display_format": "d/m/Y",
+            "return_format": "Y-m-d",
+            "first_day": 1,
+            "required": 1,
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_evt_type",
+            "label": "Event type",
+            "name": "event_type",
+            "type": "select",
+            "choices": {
+                "birth":       "Birth",
+                "death":       "Death",
+                "marriage":    "Marriage",
+                "reunion":     "Family reunion",
+                "immigration": "Immigration",
+                "military":    "Military service",
+                "graduation":  "Graduation",
+                "other":       "Other"
+            },
+            "default_value": "other",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 1,
+            "ajax": 0,
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_evt_location",
+            "label": "Location",
+            "name": "location",
+            "type": "relationship",
+            "post_type": ["fa_location"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": 1,
+            "wrapper": {"width": "50", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_evt_people",
+            "label": "People involved",
+            "name": "people_involved",
+            "type": "relationship",
+            "post_type": ["fa_person"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": ""
+        },
+        {
+            "key": "field_fa_evt_desc",
+            "label": "Description",
+            "name": "description",
+            "type": "wysiwyg",
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_fa_evt_media",
+            "label": "Media",
+            "name": "media",
+            "type": "gallery",
+            "return_format": "array",
+            "preview_size": "medium",
+            "insert": "append",
+            "library": "all",
+            "min": "",
+            "max": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "fa_event"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": ["the_content"],
+    "active": true,
+    "description": "",
+    "show_in_rest": 1
+}

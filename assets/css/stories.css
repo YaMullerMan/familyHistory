@@ -1,0 +1,185 @@
+/* ============================================================
+   Stories listing page
+   ============================================================ */
+
+/* ---- Page header ---- */
+.fa-stories-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.fa-stories-header__text h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.fa-stories-header__text p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+}
+
+/* Large variant of the primary button */
+.fa-btn--lg {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9375rem;
+    gap: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* ---- Search bar ---- */
+.fa-stories-search {
+    margin-bottom: 1.5rem;
+}
+
+.fa-stories-search__wrap {
+    position: relative;
+    max-width: 480px;
+}
+
+.fa-stories-search__icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.fa-stories-search__input {
+    padding-left: 2.25rem;
+    width: 100%;
+}
+
+/* ---- Stories grid ---- */
+.fa-stories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+/* ---- Story card ---- */
+.fa-story-item {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-card, #fff);
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text-primary);
+    box-shadow: var(--shadow-card);
+    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+.fa-story-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    border-color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* Cover image area */
+.fa-story-item__cover {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--surface-1);
+}
+.fa-story-item__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 200ms ease;
+}
+.fa-story-item:hover .fa-story-item__cover img {
+    transform: scale(1.03);
+}
+
+/* Placeholder cover (no image) */
+.fa-story-item__cover--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, #d4e8bb 100%);
+}
+.fa-story-item__initial {
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    opacity: 0.6;
+    line-height: 1;
+    user-select: none;
+}
+
+/* Card body */
+.fa-story-item__body {
+    padding: 0.875rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+}
+
+.fa-story-item__title {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.fa-story-item__date {
+    font-size: 0.775rem;
+    color: var(--text-muted);
+}
+
+/* People chips */
+.fa-story-item__people {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.1rem;
+}
+.fa-story-item__person {
+    font-size: 0.7rem;
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    padding: 0.15rem 0.45rem;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+.fa-story-item__person--more {
+    background: var(--surface-1);
+    color: var(--text-muted);
+}
+
+.fa-story-item__excerpt {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-top: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ---- Empty states ---- */
+.fa-stories-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+.fa-stories-empty p {
+    font-size: 0.9375rem;
+}

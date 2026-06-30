@@ -1,0 +1,351 @@
+/* ============================================================
+   Family tree — org-chart layout
+   ============================================================ */
+
+.fa-tree-page {
+    padding-bottom: 3rem;
+}
+
+/* ---- Toolbar ---- */
+.fa-tree-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.fa-tree-toolbar__title {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.fa-tree-toolbar__controls {
+    position: relative;
+}
+
+/* ---- Loading dots ---- */
+.fa-tree-loading {
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    justify-content: center;
+}
+
+.fa-tree-loading__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    margin: 0 3px;
+    animation: fa-bounce 1s ease-in-out infinite;
+}
+.fa-tree-loading__dot:nth-child(2) { animation-delay: 0.15s; }
+.fa-tree-loading__dot:nth-child(3) { animation-delay: 0.30s; }
+
+@keyframes fa-bounce {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+    40%            { transform: scale(1);   opacity: 1; }
+}
+
+/* ---- Scrollable canvas ---- */
+.fa-tree-scroll {
+    overflow-x: auto;
+    padding: 1rem 0 2rem;
+}
+
+.fa-tree-root {
+    display: inline-block;
+    min-width: 100%;
+}
+
+/* ============================================================
+   Core tree structure
+   Based on the classic CSS org-chart using borders on li::before/after
+   ============================================================ */
+
+ul.fa-tree {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    padding-top: 2rem;    /* space for the vertical connector from parent */
+}
+
+/* Vertical line from parent card down to horizontal bar */
+ul.fa-tree::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-1px);
+    width: 2px;
+    height: 2rem;
+    background: var(--border-strong);
+}
+
+/* Horizontal bar spanning siblings */
+ul.fa-tree::after {
+    content: '';
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--border-strong);
+}
+
+/* Clip the horizontal bar so it only spans from center of first child to center of last */
+ul.fa-tree > li:first-child::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 2px;
+    background: var(--surface-0);  /* same as page bg — masks left half of bar for first child */
+    z-index: 1;
+}
+
+ul.fa-tree > li:last-child::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 2px;
+    background: var(--surface-0);  /* masks right half of bar for last child */
+    z-index: 1;
+}
+
+/* Single child — no horizontal bar needed */
+ul.fa-tree > li:only-child::before,
+ul.fa-tree > li:only-child::after {
+    display: none;
+}
+ul.fa-tree > li:only-child > ul.fa-tree::before {
+    display: block;
+}
+
+/* Vertical line from horizontal bar down to each child's card */
+ul.fa-tree > li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0.75rem;
+    position: relative;
+}
+
+ul.fa-tree > li > .fa-tree-card {
+    margin-top: 1.5rem;
+    position: relative;
+}
+
+/* Vertical tick from the horizontal bar down to the card */
+ul.fa-tree > li > .fa-tree-card::before {
+    content: '';
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-1px);
+    width: 2px;
+    height: 1.5rem;
+    background: var(--border-strong);
+}
+
+/* Root level — no top connectors */
+ul.fa-tree.fa-tree--root {
+    padding-top: 0;
+}
+ul.fa-tree.fa-tree--root::before,
+ul.fa-tree.fa-tree--root::after {
+    display: none;
+}
+ul.fa-tree.fa-tree--root > li > .fa-tree-card::before {
+    display: none;
+}
+
+/* ---- Person card ---- */
+.fa-tree-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    background: var(--surface-card);
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+.fa-tree-card:hover {
+    border-color: var(--color-primary);
+}
+
+.fa-tree-card__sep {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 0 0.5rem;
+    user-select: none;
+}
+
+/* ---- Person link inside card ---- */
+.fa-tree-person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: color var(--transition);
+    padding: 0.1rem 0.2rem;
+    border-radius: 4px;
+}
+.fa-tree-person:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+.fa-tree-person--deceased .fa-tree-person__name {
+    color: var(--text-muted);
+}
+.fa-tree-person--deceased .fa-tree-person__years {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.fa-tree-person__name {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.fa-tree-person__years {
+    font-size: 0.675rem;
+    color: var(--text-muted);
+}
+
+/* ---- Orphan card (unconnected root) ---- */
+.fa-tree-card--orphan {
+    border-style: dashed;
+    border-color: var(--border-strong);
+}
+.fa-tree-card--orphan:hover {
+    border-color: var(--color-primary);
+    border-style: dashed;
+}
+
+/* ---- Add-parent button (inside orphan card) ---- */
+.fa-tree-card__add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
+    background: var(--surface-1);
+    color: var(--text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 0.35rem;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+    padding: 0;
+}
+.fa-tree-card__add-btn:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}
+
+/* ---- Parent-picker popover ---- */
+.fa-tree-parent-picker {
+    position: fixed;
+    z-index: 200;
+    background: var(--surface-2, #fff);
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    padding: 0.65rem;
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.fa-tree-picker__title {
+    font-size: 0.775rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    line-height: 1.3;
+}
+
+.fa-tree-picker__results {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.fa-tree-picker__result {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.45rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: background var(--transition);
+}
+.fa-tree-picker__result:hover {
+    background: var(--color-primary-light, #EAF3DE);
+    color: var(--color-primary-dark, #27500A);
+}
+
+.fa-tree-picker__result-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.fa-tree-picker__result-years {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.fa-tree-picker__empty {
+    padding: 0.45rem 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ---- Highlight on jump-to ---- */
+.fa-tree--highlight > .fa-tree-card {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 109, 17, 0.15);
+    animation: fa-tree-pulse 2s ease;
+}
+@keyframes fa-tree-pulse {
+    0%   { box-shadow: 0 0 0 3px rgba(59, 109, 17, 0.35); }
+    100% { box-shadow: 0 0 0 3px rgba(59, 109, 17, 0); }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+    .fa-tree-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .fa-tree-card {
+        padding: 0.4rem 0.6rem;
+    }
+    .fa-tree-person__name { font-size: 0.75rem; }
+}

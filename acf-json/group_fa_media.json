@@ -1,0 +1,120 @@
+{
+    "key": "group_fa_media",
+    "title": "Media item fields",
+    "fields": [
+        {
+            "key": "field_fa_med_type",
+            "label": "Media type",
+            "name": "media_type",
+            "type": "select",
+            "choices": {
+                "photo":       "Photo",
+                "document":    "Document",
+                "audio":       "Audio",
+                "video":       "Video",
+                "certificate": "Certificate",
+                "newspaper":   "Newspaper clipping"
+            },
+            "default_value": "photo",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 1,
+            "ajax": 0,
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_med_date_circa",
+            "label": "Date (circa)",
+            "name": "date_circa",
+            "type": "text",
+            "placeholder": "e.g. circa 1943 or Summer 1978",
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_med_photo",
+            "label": "Photo",
+            "name": "photo",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "wrapper": {"width": "50", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_med_file",
+            "label": "File (non-photo)",
+            "name": "file",
+            "type": "file",
+            "return_format": "array",
+            "library": "all",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_fa_med_caption",
+            "label": "Caption",
+            "name": "caption",
+            "type": "textarea",
+            "rows": 3
+        },
+        {
+            "key": "field_fa_med_people",
+            "label": "People in media",
+            "name": "people_in_media",
+            "type": "relationship",
+            "post_type": ["fa_person"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "wrapper": {"width": "34", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_med_location",
+            "label": "Location",
+            "name": "location",
+            "type": "relationship",
+            "post_type": ["fa_location"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": 1,
+            "wrapper": {"width": "33", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_med_event",
+            "label": "Related event",
+            "name": "event",
+            "type": "relationship",
+            "post_type": ["fa_event"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": 1,
+            "wrapper": {"width": "33", "class": "", "id": ""}
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "fa_media"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": ["the_content"],
+    "active": true,
+    "description": "",
+    "show_in_rest": 1
+}

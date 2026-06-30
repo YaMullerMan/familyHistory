@@ -1,0 +1,94 @@
+{
+    "key": "group_fa_story",
+    "title": "Story fields",
+    "fields": [
+        {
+            "key": "field_fa_str_content",
+            "label": "Story content",
+            "name": "story_content",
+            "type": "wysiwyg",
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_fa_str_date",
+            "label": "Story date (approximate)",
+            "name": "story_date",
+            "type": "date_picker",
+            "display_format": "d/m/Y",
+            "return_format": "Y-m-d",
+            "first_day": 1,
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_str_cover",
+            "label": "Cover image",
+            "name": "cover_image",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_str_author",
+            "label": "Author (family member)",
+            "name": "author_person",
+            "type": "relationship",
+            "post_type": ["fa_person"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": 1,
+            "wrapper": {"width": "50", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_str_people",
+            "label": "People featured",
+            "name": "people_featured",
+            "type": "relationship",
+            "post_type": ["fa_person"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "wrapper": {"width": "50", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_str_locations",
+            "label": "Locations featured",
+            "name": "locations_featured",
+            "type": "relationship",
+            "post_type": ["fa_location"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "wrapper": {"width": "50", "class": "", "id": ""}
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "fa_story"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": ["the_content"],
+    "active": true,
+    "description": "",
+    "show_in_rest": 1
+}

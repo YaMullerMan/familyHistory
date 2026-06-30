@@ -1,0 +1,234 @@
+/* ============================================================
+   Home page layout
+   ============================================================ */
+.fa-home {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Row 1: Today + Glance — 2fr + 1fr */
+.fa-home-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    align-items: start;
+}
+
+/* Row 3: Recent + Birthdays — 2fr + 1fr */
+.fa-home-bottom {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    align-items: start;
+}
+
+@media (max-width: 840px) {
+    .fa-home-top,
+    .fa-home-bottom {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   Tiles section
+   ============================================================ */
+.fa-tiles-section {}
+
+/* ============================================================
+   Today in family history
+   ============================================================ */
+.fa-today {}
+
+.fa-today-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.fa-today-sub {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin: 0.75rem 0 0.4rem;
+}
+.fa-today-sub:first-of-type {
+    margin-top: 0.5rem;
+}
+
+.fa-today-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.fa-today-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    border-bottom: 0.5px solid var(--border);
+}
+.fa-today-item:last-child { border-bottom: none; }
+
+.fa-today-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.fa-today-icon--birthday {
+    background: #FEF9C3;
+    color: #854D0E;
+}
+.fa-today-icon--event {
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+}
+
+.fa-today-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.fa-today-text a {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.fa-today-text a:hover { color: var(--color-primary); text-decoration: none; }
+
+.fa-today-year {
+    font-size: 0.775rem;
+    color: var(--text-muted);
+}
+
+/* ============================================================
+   At a glance — stats grid
+   ============================================================ */
+.fa-glance {}
+
+.fa-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.625rem;
+    margin-top: 0.75rem;
+}
+
+/* 5th stat spans full width on 2-col grid */
+.fa-stats-grid .fa-stat-card:nth-child(5) {
+    grid-column: 1 / -1;
+}
+
+.fa-stat-card--link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    transition: border-color var(--transition), background var(--transition);
+}
+.fa-stat-card--link:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+    text-decoration: none;
+}
+.fa-stat-card--link .fa-stat-card__label {
+    color: var(--text-muted);
+    transition: color var(--transition);
+}
+.fa-stat-card--link:hover .fa-stat-card__label {
+    color: var(--color-primary-dark);
+}
+
+/* ============================================================
+   Feed (recent additions)
+   ============================================================ */
+.fa-feed__item {
+    gap: 0.6rem;
+    padding: 0.6rem 0;
+}
+
+.fa-feed__text {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+.fa-feed__text a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.fa-feed__text a:hover { color: var(--color-primary); }
+
+/* ============================================================
+   Upcoming birthdays
+   ============================================================ */
+.fa-birthday-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.fa-birthday-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.55rem 0;
+    border-bottom: 0.5px solid var(--border);
+}
+.fa-birthday-item:last-child { border-bottom: none; }
+
+.fa-birthday-when {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+    min-width: 72px;
+    padding-top: 0.1rem;
+}
+.fa-birthday-when--today {
+    color: var(--color-primary-dark);
+    background: var(--color-primary-light);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+}
+
+.fa-birthday-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+}
+.fa-birthday-info a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.fa-birthday-info a:hover { color: var(--color-primary); text-decoration: none; }
+
+.fa-birthday-date {
+    font-size: 0.775rem;
+    color: var(--text-muted);
+}
+
+.fa-birthday-memo {
+    font-style: italic;
+}
+
+/* ============================================================
+   Shared utilities used on home
+   ============================================================ */
+.fa-empty-state {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    padding: 0.5rem 0;
+}
+.fa-empty-state a { color: var(--color-primary); }
+
+.fa-text-muted { color: var(--text-muted); }
+.fa-text-sm    { font-size: 0.8rem; }

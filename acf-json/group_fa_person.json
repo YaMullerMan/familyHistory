@@ -1,0 +1,171 @@
+{
+    "key": "group_fa_person",
+    "title": "Person fields",
+    "fields": [
+        {
+            "key": "field_fa_per_first_name",
+            "label": "First name",
+            "name": "first_name",
+            "type": "text",
+            "required": 1,
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_middle_name",
+            "label": "Middle name",
+            "name": "middle_name",
+            "type": "text",
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_last_name",
+            "label": "Last name",
+            "name": "last_name",
+            "type": "text",
+            "required": 1,
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_maiden_name",
+            "label": "Maiden name",
+            "name": "maiden_name",
+            "type": "text",
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_is_living",
+            "label": "Is living",
+            "name": "is_living",
+            "type": "true_false",
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Living",
+            "ui_off_text": "Deceased",
+            "wrapper": {"width": "20", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_birth_date",
+            "label": "Birth date",
+            "name": "birth_date",
+            "type": "date_picker",
+            "display_format": "d/m/Y",
+            "return_format": "Y-m-d",
+            "first_day": 1,
+            "wrapper": {"width": "20", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_birth_location",
+            "label": "Birth location",
+            "name": "birth_location",
+            "type": "relationship",
+            "post_type": ["fa_location"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": 1,
+            "wrapper": {"width": "60", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_death_date",
+            "label": "Death date",
+            "name": "death_date",
+            "type": "date_picker",
+            "display_format": "d/m/Y",
+            "return_format": "Y-m-d",
+            "first_day": 1,
+            "wrapper": {"width": "20", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_death_location",
+            "label": "Death location",
+            "name": "death_location",
+            "type": "relationship",
+            "post_type": ["fa_location"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": 1,
+            "wrapper": {"width": "60", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_profile_photo",
+            "label": "Profile photo",
+            "name": "profile_photo",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "wrapper": {"width": "20", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_bio",
+            "label": "Bio",
+            "name": "bio",
+            "type": "wysiwyg",
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_fa_per_parents",
+            "label": "Parents",
+            "name": "parents",
+            "type": "relationship",
+            "post_type": ["fa_person"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": 2,
+            "wrapper": {"width": "33", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_spouses",
+            "label": "Spouses",
+            "name": "spouses",
+            "type": "relationship",
+            "post_type": ["fa_person"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "wrapper": {"width": "33", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_children",
+            "label": "Children",
+            "name": "children",
+            "type": "relationship",
+            "post_type": ["fa_person"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": "",
+            "wrapper": {"width": "34", "class": "", "id": ""}
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "fa_person"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": ["the_content"],
+    "active": true,
+    "description": "",
+    "show_in_rest": 1
+}

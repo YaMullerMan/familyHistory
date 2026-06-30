@@ -1,0 +1,125 @@
+{
+    "key": "group_fa_location",
+    "title": "Location fields",
+    "fields": [
+        {
+            "key": "field_fa_loc_name",
+            "label": "Location name",
+            "name": "location_name",
+            "type": "text",
+            "required": 1,
+            "placeholder": "e.g. Henderson Farmhouse",
+            "wrapper": {"width": "60", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_type",
+            "label": "Location type",
+            "name": "location_type",
+            "type": "select",
+            "choices": {
+                "birthplace":  "Birthplace",
+                "residence":   "Residence",
+                "burial":      "Burial site",
+                "reunion":     "Reunion venue",
+                "immigration": "Immigration point",
+                "other":       "Other"
+            },
+            "default_value": "other",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 1,
+            "ajax": 0,
+            "wrapper": {"width": "40", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_address",
+            "label": "Street address",
+            "name": "address",
+            "type": "text",
+            "wrapper": {"width": "50", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_city",
+            "label": "City",
+            "name": "city",
+            "type": "text",
+            "wrapper": {"width": "25", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_state",
+            "label": "State / province",
+            "name": "state_province",
+            "type": "text",
+            "wrapper": {"width": "15", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_country",
+            "label": "Country",
+            "name": "country",
+            "type": "text",
+            "wrapper": {"width": "10", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_lat",
+            "label": "Latitude",
+            "name": "lat",
+            "type": "number",
+            "step": "any",
+            "wrapper": {"width": "20", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_lng",
+            "label": "Longitude",
+            "name": "lng",
+            "type": "number",
+            "step": "any",
+            "wrapper": {"width": "20", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_date_start",
+            "label": "Date range — start",
+            "name": "date_range_start",
+            "type": "date_picker",
+            "display_format": "d/m/Y",
+            "return_format": "Y-m-d",
+            "first_day": 1,
+            "wrapper": {"width": "30", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_date_end",
+            "label": "Date range — end",
+            "name": "date_range_end",
+            "type": "date_picker",
+            "display_format": "d/m/Y",
+            "return_format": "Y-m-d",
+            "first_day": 1,
+            "wrapper": {"width": "30", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_loc_desc",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "rows": 4
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "fa_location"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": ["the_content"],
+    "active": true,
+    "description": "",
+    "show_in_rest": 1
+}

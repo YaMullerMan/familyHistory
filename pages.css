@@ -1,0 +1,561 @@
+/*  ---  Holds the styles for individual pages  ---  */
+
+/* ----- BELIEFS ----- */
+.beliefs strong {
+    font-weight: 600;
+}
+
+
+/* ----- STAFF ----- */
+.staff-items__container,
+.officer-items__container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    gap: 25px;
+    row-gap: 50px;
+    justify-content: center;
+}
+
+.staff-item {
+    display: flex;
+    gap: 10px;
+    width: 48%;
+    align-items: center;
+}
+
+.staff-item.full {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 60% 1fr;
+}
+
+.staff-item:not(.staff-item.full) img {
+    border-radius: 50%;
+}
+
+.staff-item *,
+.officer-item * {
+    margin: 5px 0;
+}
+
+.staff-item__info {
+    padding: 10px;
+}
+
+.staff-item .position,
+.officer-item .position {
+    text-transform: uppercase;
+    color: var(--primary-red);
+    font-weight: 500;
+}
+
+.staff-item .phone-email {
+    color: var(--medium-grey)
+}
+
+.officer-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 200px;
+    text-align: center;
+}
+
+.officer-item.full {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.officer-item.full img {
+    max-width: 800px;
+    margin: auto;
+    width: 65%;
+}
+
+
+/* ----- FAQ ----- */
+details.wp-block-details {
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.wp-block-details summary {
+    padding: 15px;
+    font-weight: 600;
+    background-color: #F4F5F7;
+}
+
+details.wp-block-details p {
+    padding: 0 15px;
+}
+
+details.wp-block-details p:last-of-type {
+    margin-bottom: 0;
+    padding-bottom: 15px;
+}
+
+
+/* ----- SINGLE SERMON ----- */
+.sermon-container {}
+
+.sermon-audio {
+    position: relative;
+    max-width: 800px;
+    margin: auto;
+}
+
+.sermon-container audio {
+    width: 90%;
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translate(-50%, -10%);
+}
+
+.sermon-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+
+/* ----- MISSIONARY ------ */
+.missionaries-container {
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 4%;
+}
+
+.missionary-item {
+    text-align: center;
+}
+
+.missionary-item .red {
+    color: #800A0A;
+    margin: 2px 0;
+}
+
+.missionary-item img {
+    margin: 0 auto 10px auto;
+}
+
+.missionary-item a {
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+
+/* ----- CLASSES ----- */
+.categories .flex-item {
+    background-color: var(--input-background);
+    border-radius: 5px;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.classes-container {
+    padding: 50px 0 25px 0;
+}
+
+.classes-container .flex {
+    margin-bottom: 50px;
+}
+
+.classes-container .flex img {
+    width: 45%;
+    max-width: 500px;
+    min-width: 300px;
+}
+
+@media screen and (max-width: 860px) {
+    .classes-container .flex img {
+        width: 100%;
+    }
+
+    .classes-container .flex {
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+
+/* ----- GET INVOLVED ----- */
+
+.ministries-container {}
+
+.ministries-navigation {
+    padding: 25px 45px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.ministry-icon {
+    width: 100px;
+    height: 100px;
+    background: var(--tan);
+    color: var(--primary-red);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.ministry-icon.active {
+    background-color: var(--white);
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.15);
+}
+
+.ministry-icon img {
+    width: 40%;
+}
+
+.ministries-content {
+    /* position: relative; */
+    min-height: 450px;
+}
+
+.ministry-item {
+    /* one day will make this a transition
+    position: absolute; */
+    background-color: #ffffff;
+    box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    padding: 35px 50px;
+    border-radius: 10px;
+    display: none;
+}
+
+.ministry-item.active {
+    /* z-index: 10; */
+    display: block;
+}
+
+.ministry-item-top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 10px;
+}
+
+.ministry-leader {
+    width: 50px;
+    height: auto;
+}
+
+.ministry-flex {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.ministry-images {
+    display: flex;
+    /* justify-content: center; */
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ministry-image {
+    max-width: 45%;
+}
+
+@media screen and (max-width: 1020px) {
+    .ministries-navigation {
+        padding: 0 0 25px 0;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .ministry-icon {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media screen and (max-width: 860px) {
+    .ministry-item {
+        padding: 35px 25px;
+    }
+
+    .ministry-item-top {
+        flex-direction: column;
+    }
+
+    .ministry-flex {
+        flex-direction: row-reverse;
+        justify-content: left;
+    }
+
+    .ministry-image {
+        max-width: 100%;
+    }
+}
+
+
+/* ----- CONTACT ----- */
+.wpforms-container .wpforms-field-container input,
+.wpforms-container .wpforms-field-container input[type="text"],
+.wpforms-container .wpforms-field-container input[type="email"],
+.wpforms-container .wpforms-field-container textarea {
+    background-color: var(--input-background);
+    border: none;
+    border-radius: 10px;
+    color: var(--dark-grey);
+    padding: 7px 15px;
+    font-size: 0.9em;
+}
+
+.wpforms-container .wpforms-field-container textarea {
+    padding: 15px;
+}
+
+.wpforms-container .wpforms-field-container .wpforms-field-label {
+    font-weight: 400;
+    font-size: 0.8em;
+}
+
+.wpforms-container .wpforms-field.wpforms-field-textarea {
+    padding-top: 0;
+}
+
+.wpforms-submit.button {
+    margin-top: 10px;
+}
+
+.input-half {
+    width: 48%;
+    display: inline-block;
+}
+
+@media screen and (min-width: 680px) {
+    .input-half:nth-child(even) {
+        margin: 0 0 0 10px;
+    }
+}
+
+.contact-container {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    padding-top: 25px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.contact-container a {
+    display: inline-block;
+    text-decoration: underline;
+}
+
+.contact-container__left {
+    padding: 50px 25px;
+}
+
+.contact-container__right {
+    padding: 50px 25px;
+}
+
+.contact__form {
+    padding: 20px 40px 10px 40px;
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.075);
+    border-radius: 10px;
+}
+
+@media screen and (max-width: 860px) {
+    .contact-container {
+        grid-template-columns: 100%;
+        justify-content: center;
+        padding-top: 0;
+    }
+
+    .contact-container__right,
+    .contact-container__left {
+        padding: 25px 5px;
+    }
+}
+
+@media screen and (max-width: 680px) {
+    .input-half {
+        width: 100%;
+    }
+}
+
+
+/* ------ SERMONS ------ */
+.sermons__container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    row-gap: 4%;
+    column-gap: 2%;
+    justify-content: center;
+}
+
+.sermons__sermon {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #F4F5F7;
+    border-radius: 7px 7px 5px 5px;
+}
+
+.sermons__container img {
+    border-radius: 5px;
+}
+
+.sermons__info {
+    padding: 5px 15px 10px;
+}
+
+.sermons__link {
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    right: 0;
+    padding: 0;
+    position: absolute;
+}
+
+.sermons__details {
+    font-size: 0.9em;
+    margin: 5px 0;
+}
+
+.dates {
+    display: none;
+    margin-right: 10px;
+}
+
+#ajax-search-form div.button {
+    background: none;
+    background-color: var(--input-background);
+    min-width: 25px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: #000111;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+#ajax-search-form {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 10px;
+}
+
+.ajax-pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.ajax-pagination a {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 5px;
+    background: #0073aa;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.ajax-pagination a:hover {
+    background: #005580;
+}
+
+
+/* ----- About Us Page -----  */
+
+.wrapper {
+    width: 100%;
+    max-width: 1400px;
+    min-width: 300px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.about .slider__container {
+    margin: 0 auto 0;
+    /* padding: 25px 0 75px 0; */
+    width: 550px;
+    height: auto;
+    position: relative;
+}
+
+.slides {
+    display: flex;
+    height: 100%;
+}
+
+.slide {
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.slide img {
+    width: 98%;
+}
+
+.navigation {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.fa-chevron-left:hover,
+.fa-chevron-right:hover {
+    color: #D64C1D;
+}
+
+.backward,
+.forward {
+    color: #ffffff;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    right: 50px;
+    background-color: tan;
+    padding: 10px;
+    line-height: 0.8;
+    border-radius: 50%;
+}
+
+.backward {
+    left: 50px;
+    right: auto;
+}
+
+.about.page-width {
+    max-width: 1250px;
+    text-align: center;
+    padding: 50px;
+}
+
+@media screen and (max-width: 1020px) {
+    .wrapper {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .slider-container {
+        padding: 25px 0 50px 0;
+    }
+}
+
+
+
+
+.grid.events {}
