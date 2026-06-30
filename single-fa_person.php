@@ -14,6 +14,12 @@ $birth_loc   = get_field('birth_location', $person_id);
 $death_loc   = get_field('death_location', $person_id);
 $photo       = get_field('profile_photo',  $person_id);
 
+// Current address
+$current_address = get_field('current_address', $person_id);
+$current_city    = get_field('current_city',    $person_id);
+$current_state   = get_field('current_state',   $person_id);
+$current_zip     = get_field('current_zip',     $person_id);
+
 // Relationships
 $parents  = get_field('parents',  $person_id) ?: [];
 $spouses  = get_field('spouses',  $person_id) ?: [];
@@ -63,7 +69,7 @@ $media_q = new WP_Query([
 function fa_p_fmt_date($d) {
     if (!$d) return null;
     $dt = DateTime::createFromFormat('Y-m-d', $d);
-    return $dt ? $dt->format('j F Y') : $d;
+    return $dt ? $dt->format('F j, Y') : $d;
 }
 
 function fa_p_person_card($p) {
@@ -179,6 +185,21 @@ get_header();
                 <?php endif; ?>
             </div>
 
+            <?php
+            $addr_parts = array_filter([
+                $current_address,
+                implode(' ', array_filter([$current_city, $current_state])),
+                $current_zip,
+            ]);
+            if ($addr_parts): ?>
+                <div class="fa-profile-address">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    <?php echo esc_html(implode(', ', $addr_parts)); ?>
+                </div>
+            <?php endif; ?>
+
             <?php if ($branches || !$is_living): ?>
                 <div class="fa-profile-tags">
                     <?php foreach ($branches as $branch): ?>
@@ -192,9 +213,26 @@ get_header();
         </div>
 
         <!-- Edit button -->
-        <?php if (current_user_can('edit_post', $person_id)): ?>
+        <?php if (current_user_can('edit_post', $person_id)):
+            $add_person_pages = get_posts([
+                'post_type'      => 'page',
+                'posts_per_page' => 1,
+                'meta_key'       => '_wp_page_template',
+                'meta_value'     => 'templates/template-add-person.php',
+                'fields'         => 'ids',
+            ]);
+            $edit_url = $add_person_pages
+                ? add_query_arg('edit', $person_id, get_permalink($add_person_pages[0]))
+                : get_edit_post_link($person_id);
+        ?>
             <div class="fa-profile-actions">
-                <a href="<?php echo esc_url(get_edit_post_link($person_id)); ?>" class="fa-btn fa-btn--secondary fa-btn--sm">Edit</a>
+                <a href="<?php echo esc_url($edit_url); ?>" class="fa-btn fa-btn--secondary fa-btn--sm">Edit</a>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($bio): ?>
+            <div class="fa-profile-hero__bio fa-profile-bio">
+                <?php echo wp_kses_post($bio); ?>
             </div>
         <?php endif; ?>
 
@@ -208,14 +246,6 @@ get_header();
 
         <!-- Main column -->
         <div class="fa-profile-main">
-
-            <!-- Bio -->
-            <?php if ($bio): ?>
-                <section class="fa-profile-section" aria-labelledby="fa-bio-heading">
-                    <h2 class="fa-profile-section__title" id="fa-bio-heading">Biography</h2>
-                    <div class="fa-profile-bio"><?php echo wp_kses_post($bio); ?></div>
-                </section>
-            <?php endif; ?>
 
             <!-- Events timeline -->
             <?php if ($events->have_posts()): ?>

@@ -44,6 +44,17 @@
             "wrapper": {"width": "20", "class": "", "id": ""}
         },
         {
+            "key": "field_fa_per_is_immigrant",
+            "label": "Is immigrant",
+            "name": "is_immigrant",
+            "type": "true_false",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Yes",
+            "ui_off_text": "No",
+            "wrapper": {"width": "20", "class": "", "id": ""}
+        },
+        {
             "key": "field_fa_per_birth_date",
             "label": "Birth date",
             "name": "birth_date",
@@ -148,6 +159,63 @@
             "min": "",
             "max": "",
             "wrapper": {"width": "34", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_immigration_location",
+            "label": "Immigration location",
+            "name": "immigration_location",
+            "type": "relationship",
+            "post_type": ["fa_location"],
+            "taxonomy": [],
+            "filters": ["search"],
+            "return_format": "object",
+            "min": "",
+            "max": 1,
+            "wrapper": {"width": "100", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_current_address",
+            "label": "Street address",
+            "name": "current_address",
+            "type": "text",
+            "wrapper": {"width": "100", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_current_city",
+            "label": "City",
+            "name": "current_city",
+            "type": "text",
+            "wrapper": {"width": "40", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_current_state",
+            "label": "State",
+            "name": "current_state",
+            "type": "text",
+            "wrapper": {"width": "30", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_current_zip",
+            "label": "ZIP code",
+            "name": "current_zip",
+            "type": "text",
+            "wrapper": {"width": "30", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_current_lat",
+            "label": "Current lat (auto)",
+            "name": "current_lat",
+            "type": "number",
+            "step": "any",
+            "wrapper": {"width": "50", "class": "", "id": ""}
+        },
+        {
+            "key": "field_fa_per_current_lng",
+            "label": "Current lng (auto)",
+            "name": "current_lng",
+            "type": "number",
+            "step": "any",
+            "wrapper": {"width": "50", "class": "", "id": ""}
         }
     ],
     "location": [

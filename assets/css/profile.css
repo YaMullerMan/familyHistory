@@ -70,12 +70,12 @@
 }
 
 .fa-profile-date-label {
-    font-weight: 500;
+    /* font-weight: 500;
     color: var(--text-muted);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    margin-right: 0.2rem;
+    margin-right: 0.2rem; */
 }
 
 .fa-profile-date-sep {
@@ -83,7 +83,7 @@
 }
 
 .fa-profile-date-location {
-    color: var(--text-muted);
+    /* color: var(--text-muted); */
 }
 .fa-profile-date-location a {
     color: inherit;
@@ -93,7 +93,16 @@
 
 .fa-profile-age {
     color: var(--text-muted);
-    font-style: italic;
+    /* font-style: italic; */
+}
+
+.fa-profile-address {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
 }
 
 .fa-profile-tags {
@@ -148,12 +157,19 @@
 
 /* ---- Bio ---- */
 .fa-profile-bio {
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     line-height: 1.65;
     color: var(--text-secondary);
 }
 .fa-profile-bio p { margin-bottom: 0.75em; }
 .fa-profile-bio p:last-child { margin-bottom: 0; }
+
+.fa-profile-hero__bio {
+    width: 100%;
+    padding-top: 0.85rem;
+    margin-top: 0.25rem;
+    border-top: 0.5px solid var(--border);
+}
 
 /* ---- Timeline ---- */
 .fa-timeline {

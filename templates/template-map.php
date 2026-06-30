@@ -4,13 +4,11 @@
 get_header();
 
 // Type definitions for the filter bar (matches location_type ACF choices)
+// active_default controls which types are visible on initial load
 $map_types = [
-    'birthplace'  => ['label' => 'Birthplace',    'color' => '#3B6D11'],
-    'residence'   => ['label' => 'Residence',      'color' => '#2563eb'],
-    'burial'      => ['label' => 'Burial site',    'color' => '#6b7280'],
-    'reunion'     => ['label' => 'Family reunion', 'color' => '#d97706'],
-    'immigration' => ['label' => 'Immigration',    'color' => '#7c3aed'],
-    'other'       => ['label' => 'Other',          'color' => '#374151'],
+    'residence'   => ['label' => 'Residence',   'color' => '#2563eb', 'active' => true],
+    'birthplace'  => ['label' => 'Birthplace',  'color' => '#3B6D11', 'active' => false],
+    'immigration' => ['label' => 'Immigration', 'color' => '#7c3aed', 'active' => false],
 ];
 ?>
 
@@ -21,10 +19,10 @@ $map_types = [
 
         <div class="fa-map-filters" role="group" aria-label="Filter by location type">
             <?php foreach ($map_types as $key => $cfg): ?>
-                <button class="fa-map-filter fa-map-filter--active"
+                <button class="fa-map-filter<?php echo $cfg['active'] ? ' fa-map-filter--active' : ''; ?>"
                         data-filter="<?php echo esc_attr($key); ?>"
                         style="--filter-color: <?php echo esc_attr($cfg['color']); ?>"
-                        aria-pressed="true">
+                        aria-pressed="<?php echo $cfg['active'] ? 'true' : 'false'; ?>">
                     <span class="fa-map-filter__dot" aria-hidden="true"></span>
                     <?php echo esc_html($cfg['label']); ?>
                 </button>

@@ -17,8 +17,12 @@ class RelationshipPicker {
         this.postType    = options.postType;
         this.max         = options.max || null;
         this.placeholder = options.placeholder || 'Search…';
+        this.canCreate   = options.canCreate   || false;
+        this.onCreate    = options.onCreate    || null;
+        this.clearOnBlur = options.clearOnBlur || false;
         this.selected    = [];
         this._timer      = null;
+        this._creating   = false;
         this._render();
         this._bindEvents();
     }
@@ -61,6 +65,17 @@ class RelationshipPicker {
             if (e.key === 'Escape') this._closeDropdown();
         });
 
+        if (this.clearOnBlur) {
+            this._inputEl.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (this._inputEl.value) {
+                        this._inputEl.value = '';
+                        this._closeDropdown();
+                    }
+                }, 150);
+            });
+        }
+
         document.addEventListener('click', (e) => {
             if (!this.container.contains(e.target)) this._closeDropdown();
         });
@@ -73,32 +88,57 @@ class RelationshipPicker {
         try {
             const results = await FA.searchPosts(this.postType, query);
             const filtered = results.filter(r => !this.selected.some(s => s.id === r.id));
-            this._renderDropdown(filtered);
+            this._renderDropdown(filtered, query);
         } catch (err) {
             console.error('[RelationshipPicker] search error:', err);
         }
     }
 
-    _renderDropdown(items) {
+    _renderDropdown(items, query = '') {
         this._dropdownEl.innerHTML = '';
 
-        if (!items.length) {
+        if (!items.length && !this.canCreate) {
             const li = document.createElement('li');
             li.className = 'fa-picker__empty';
             li.textContent = 'No results';
             this._dropdownEl.appendChild(li);
-        } else {
-            items.forEach(item => {
-                const li  = document.createElement('li');
-                li.className  = 'fa-picker__result';
-                li.setAttribute('role', 'option');
-                li.textContent = item.title?.rendered || item.title || '';
-                li.addEventListener('mousedown', (e) => {
-                    e.preventDefault();
-                    this._select({ id: item.id, title: li.textContent });
-                });
-                this._dropdownEl.appendChild(li);
+        }
+
+        items.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'fa-picker__result';
+            li.setAttribute('role', 'option');
+            li.textContent = item.title?.rendered || item.title || '';
+            li.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                this._select({ id: item.id, title: li.textContent });
             });
+            this._dropdownEl.appendChild(li);
+        });
+
+        // "Add" option when canCreate is enabled
+        if (this.canCreate && this.onCreate && query) {
+            const li = document.createElement('li');
+            li.className = 'fa-picker__create';
+            li.setAttribute('role', 'option');
+            li.textContent = `+ Add "${query}"`;
+            li.addEventListener('mousedown', async (e) => {
+                e.preventDefault();
+                if (this._creating) return;
+                this._creating = true;
+                li.textContent = 'Creating…';
+                li.style.opacity = '0.6';
+                try {
+                    const item = await this.onCreate(query);
+                    if (item) this._select(item);
+                } catch (err) {
+                    console.error('[RelationshipPicker] create error:', err);
+                } finally {
+                    this._creating = false;
+                }
+                this._closeDropdown();
+            });
+            this._dropdownEl.appendChild(li);
         }
 
         this._dropdownEl.hidden = false;
@@ -173,6 +213,11 @@ class RelationshipPicker {
 
     getSelected() {
         return [...this.selected];
+    }
+
+    setValues(items) {
+        this.reset();
+        items.forEach(item => this._select(item));
     }
 
     reset() {

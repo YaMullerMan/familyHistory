@@ -23,7 +23,7 @@
         const [y, m, d] = str.split('-');
         const months = ['January','February','March','April','May','June',
                         'July','August','September','October','November','December'];
-        return `${parseInt(d, 10)} ${months[parseInt(m, 10) - 1]} ${y}`;
+        return `${months[parseInt(m, 10) - 1]} ${parseInt(d, 10)}, ${y}`;
     }
 
     function stripHtml(html) {
@@ -49,10 +49,17 @@
         const thumb   = cover && typeof cover === 'object' ? (cover.sizes?.medium || cover.url) : null;
         const text    = truncate(stripHtml(acf.story_content));
         const initial = (title[0] || '?').toUpperCase();
+        const authors = Array.isArray(acf.author_person) ? acf.author_person : [];
 
         const coverHTML = thumb
             ? `<img src="${esc(thumb)}" alt="${esc(title)}" loading="lazy">`
             : `<span class="fa-story-item__initial">${esc(initial)}</span>`;
+
+        const authorsHTML = authors.length
+            ? `<div class="fa-story-item__people">${
+                authors.map(a => `<span class="fa-story-item__person">${esc(a.title?.rendered || a.title || '')}</span>`).join('')
+              }</div>`
+            : '';
 
         return `
             <a href="${esc(link)}" class="fa-story-item">
@@ -61,8 +68,9 @@
                 </div>
                 <div class="fa-story-item__body">
                     <h2 class="fa-story-item__title">${esc(title)}</h2>
-                    ${date  ? `<div class="fa-story-item__date">${esc(date)}</div>` : ''}
-                    ${text  ? `<p  class="fa-story-item__excerpt">${esc(text)}</p>` : ''}
+                    ${date       ? `<div class="fa-story-item__date">${esc(date)}</div>` : ''}
+                    ${authorsHTML}
+                    ${text       ? `<p  class="fa-story-item__excerpt">${esc(text)}</p>` : ''}
                 </div>
             </a>`;
     }

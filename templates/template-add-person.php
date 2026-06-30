@@ -6,14 +6,16 @@ if (!is_user_logged_in()) {
     exit;
 }
 
+$edit_id = isset($_GET['edit']) ? absint($_GET['edit']) : 0;
+
 get_header();
 ?>
 
 <div class="fa-page fa-add-person">
 
     <div class="fa-form-page-header">
-        <h1>Add a person</h1>
-        <p>Fill in what you know — only first and last name are required.</p>
+        <h1><?php echo $edit_id ? 'Edit person' : 'Add a person'; ?></h1>
+        <p><?php echo $edit_id ? 'Update this person\'s information.' : 'Fill in what you know — only first and last name are required.'; ?></p>
     </div>
 
     <!-- Step indicator -->
@@ -44,7 +46,7 @@ get_header();
         </div>
     </div>
 
-    <form id="fa-person-form" novalidate>
+    <form id="fa-person-form" novalidate data-edit-id="<?php echo esc_attr($edit_id); ?>">
 
         <!-- ================================================================
              Step 1 — Basic info
@@ -81,6 +83,14 @@ get_header();
                                 <span class="fa-toggle__slider"></span>
                             </label>
                             <span id="is_living_label" class="fa-toggle-label">Living</span>
+
+                            <span class="fa-toggle-divider" aria-hidden="true"></span>
+
+                            <label class="fa-toggle">
+                                <input type="checkbox" id="is_immigrant" name="is_immigrant">
+                                <span class="fa-toggle__slider"></span>
+                            </label>
+                            <span class="fa-toggle-label">Immigrated</span>
                         </div>
                     </div>
                 </div>
@@ -99,6 +109,15 @@ get_header();
                     </div>
                 </div>
 
+                <div id="immigration-section" hidden>
+                    <div class="fa-form-row" style="margin-top:0.75rem;">
+                        <div class="fa-field">
+                            <label class="fa-label" style="font-size:0.8125rem; color:var(--text-secondary);">Immigrated from</label>
+                            <div id="immigration-location-picker"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="death-section">
                     <hr class="fa-form-divider">
                     <h3 class="fa-form-sub-title">Death</h3>
@@ -114,6 +133,36 @@ get_header();
                     </div>
                 </div>
 
+                <hr class="fa-form-divider">
+                <h3 class="fa-form-sub-title">Current address</h3>
+
+                <div class="fa-form-row">
+                    <div class="fa-field">
+                        <label class="fa-label" for="current_address">Street address</label>
+                        <input class="fa-input" type="text" id="current_address" name="current_address"
+                            autocomplete="street-address" placeholder="123 Main St">
+                    </div>
+                </div>
+
+                <div class="fa-form-row fa-form-row--3">
+                    <div class="fa-field">
+                        <label class="fa-label" for="current_city">City</label>
+                        <input class="fa-input" type="text" id="current_city" name="current_city"
+                            autocomplete="address-level2" placeholder="Louisville">
+                    </div>
+                    <div class="fa-field">
+                        <label class="fa-label" for="current_state">State</label>
+                        <input class="fa-input" type="text" id="current_state" name="current_state"
+                            autocomplete="address-level1" placeholder="KY">
+                    </div>
+                    <div class="fa-field">
+                        <label class="fa-label" for="current_zip">ZIP code</label>
+                        <input class="fa-input" type="text" id="current_zip" name="current_zip"
+                            autocomplete="postal-code" placeholder="40202"
+                            inputmode="numeric" pattern="[0-9]{5}(-[0-9]{4})?">
+                    </div>
+                </div>
+
             </div>
         </div><!-- /step 1 -->
 
@@ -124,7 +173,7 @@ get_header();
         <div class="fa-step-panel" data-step="1" hidden>
             <div class="fa-card">
                 <h2 class="fa-form-section-title">Relationships</h2>
-                <p class="fa-form-hint">Search for people already in the archive. You can always update relationships later.</p>
+                <p class="fa-form-hint">Only links to people already in the archive. If someone isn't added yet, skip them — add them individually first, then come back to connect them.</p>
 
                 <div class="fa-form-field-group">
                     <div class="fa-field">

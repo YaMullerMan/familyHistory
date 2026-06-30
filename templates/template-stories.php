@@ -58,7 +58,7 @@ get_header();
                 $cover   = get_field('cover_image');
                 $date    = get_field('story_date');
                 $content = get_field('story_content');
-                $people  = get_field('people_featured') ?: [];
+                $authors = get_field('author_person') ?: [];
                 $initial = strtoupper(mb_substr(get_the_title(), 0, 1));
                 $excerpt = $content ? mb_strimwidth(wp_strip_all_tags($content), 0, 160, '…') : '';
                 $thumb   = $cover ? ($cover['sizes']['medium'] ?? $cover['url']) : null;
@@ -75,19 +75,13 @@ get_header();
                     <div class="fa-story-item__body">
                         <h2 class="fa-story-item__title"><?php the_title(); ?></h2>
                         <?php if ($dt): ?>
-                            <div class="fa-story-item__date"><?php echo esc_html($dt->format('j F Y')); ?></div>
+                            <div class="fa-story-item__date"><?php echo esc_html($dt->format('F j, Y')); ?></div>
                         <?php endif; ?>
-                        <?php if ($people): ?>
+                        <?php if ($authors): ?>
                             <div class="fa-story-item__people">
-                                <?php
-                                $shown = array_slice($people, 0, 3);
-                                foreach ($shown as $person):
-                                ?>
-                                    <span class="fa-story-item__person"><?php echo esc_html(get_the_title($person->ID)); ?></span>
-                                <?php endforeach;
-                                if (count($people) > 3): ?>
-                                    <span class="fa-story-item__person fa-story-item__person--more">+<?php echo count($people) - 3; ?></span>
-                                <?php endif; ?>
+                                <?php foreach ($authors as $author): ?>
+                                    <span class="fa-story-item__person"><?php echo esc_html(get_the_title($author->ID)); ?></span>
+                                <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
                         <?php if ($excerpt): ?>

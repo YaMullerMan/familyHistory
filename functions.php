@@ -32,9 +32,19 @@ function fa_enqueue() {
         wp_enqueue_style('fa-profile', $uri . '/assets/css/profile.css', ['fa-main'], FA_VERSION);
     }
 
+    if (is_singular('fa_story')) {
+        wp_enqueue_style('fa-story', $uri . '/assets/css/story.css', ['fa-main'], FA_VERSION);
+        wp_enqueue_style('fa-profile', $uri . '/assets/css/profile.css', ['fa-main'], FA_VERSION);
+    }
+
     if (is_page_template('templates/template-tree.php')) {
         wp_enqueue_style('fa-tree',  $uri . '/assets/css/tree.css',  ['fa-main'], FA_VERSION);
         wp_enqueue_script('fa-tree', $uri . '/assets/js/tree.js',    ['fa-api'],  FA_VERSION, true);
+    }
+
+    if (is_page_template('templates/template-media.php')) {
+        wp_enqueue_style('fa-media',  $uri . '/assets/css/media.css',  ['fa-main'], FA_VERSION);
+        wp_enqueue_script('fa-media', $uri . '/assets/js/media.js',    ['fa-api'],  FA_VERSION, true);
     }
 
     if (is_page_template('templates/template-stories.php')) {
@@ -60,6 +70,7 @@ function fa_enqueue() {
         'templates/template-add-event.php',
         'templates/template-add-story.php',
         'templates/template-upload-media.php',
+        'templates/template-add-media.php',
     ];
     if (is_page_template($form_templates)) {
         wp_enqueue_style('fa-forms', $uri . '/assets/css/forms.css', ['fa-main'], FA_VERSION);
@@ -80,6 +91,11 @@ function fa_enqueue() {
 
     if (is_page_template('templates/template-add-story.php')) {
         wp_enqueue_script('fa-add-story', $uri . '/assets/js/add-story.js',
+            ['fa-live-search', 'fa-file-upload', 'fa-multi-step'], FA_VERSION, true);
+    }
+
+    if (is_page_template('templates/template-add-media.php')) {
+        wp_enqueue_script('fa-add-media', $uri . '/assets/js/add-media.js',
             ['fa-live-search', 'fa-file-upload', 'fa-multi-step'], FA_VERSION, true);
     }
 
@@ -204,6 +220,22 @@ add_action('init', 'fa_register_post_types');
 // Taxonomy: fa_branch (family branch / surname line)
 // ---------------------------------------------------------------------------
 function fa_register_taxonomies() {
+    register_taxonomy('fa_media_type', ['fa_media'], [
+        'labels' => [
+            'name'          => 'Media types',
+            'singular_name' => 'Media type',
+            'search_items'  => 'Search types',
+            'all_items'     => 'All types',
+            'edit_item'     => 'Edit type',
+            'add_new_item'  => 'Add new type',
+        ],
+        'public'       => true,
+        'hierarchical' => false,
+        'show_in_rest' => true,
+        'rest_base'    => 'fa_media_type',
+        'rewrite'      => ['slug' => 'media-type'],
+    ]);
+
     register_taxonomy('fa_branch', ['fa_person'], [
         'labels' => [
             'name'          => 'Family branches',
@@ -220,6 +252,16 @@ function fa_register_taxonomies() {
     ]);
 }
 add_action('init', 'fa_register_taxonomies');
+
+// Seed default media types once (safe to run every request — term_exists is cheap)
+add_action('init', function () {
+    $defaults = ['Photo', 'Document', 'Video', 'Certificate', 'Newspaper Clipping'];
+    foreach ($defaults as $name) {
+        if (!term_exists($name, 'fa_media_type')) {
+            wp_insert_term($name, 'fa_media_type');
+        }
+    }
+});
 
 // ---------------------------------------------------------------------------
 // Register the `acf` field on all FA post types for REST API access.

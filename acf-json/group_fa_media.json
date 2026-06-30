@@ -6,46 +6,93 @@
             "key": "field_fa_med_type",
             "label": "Media type",
             "name": "media_type",
+            "aria-label": "",
             "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
             "choices": {
-                "photo":       "Photo",
-                "document":    "Document",
-                "audio":       "Audio",
-                "video":       "Video",
+                "photo": "Photo",
+                "document": "Document",
+                "video": "Video",
                 "certificate": "Certificate",
-                "newspaper":   "Newspaper clipping"
+                "newspaper": "Newspaper clipping"
             },
             "default_value": "photo",
             "return_format": "value",
             "multiple": 0,
             "allow_null": 0,
+            "allow_in_bindings": 1,
             "ui": 1,
             "ajax": 0,
-            "wrapper": {"width": "25", "class": "", "id": ""}
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
         },
         {
             "key": "field_fa_med_date_circa",
             "label": "Date (circa)",
             "name": "date_circa",
+            "aria-label": "",
             "type": "text",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
             "placeholder": "e.g. circa 1943 or Summer 1978",
-            "wrapper": {"width": "25", "class": "", "id": ""}
+            "default_value": "",
+            "maxlength": "",
+            "prepend": "",
+            "append": ""
         },
         {
             "key": "field_fa_med_photo",
             "label": "Photo",
             "name": "photo",
+            "aria-label": "",
             "type": "image",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
             "return_format": "array",
             "preview_size": "medium",
             "library": "all",
-            "wrapper": {"width": "50", "class": "", "id": ""}
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": ""
         },
         {
             "key": "field_fa_med_file",
             "label": "File (non-photo)",
             "name": "file",
+            "aria-label": "",
             "type": "file",
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
             "return_format": "array",
             "library": "all",
             "min_size": "",
@@ -56,47 +103,102 @@
             "key": "field_fa_med_caption",
             "label": "Caption",
             "name": "caption",
+            "aria-label": "",
             "type": "textarea",
-            "rows": 3
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "rows": 3,
+            "default_value": "",
+            "new_lines": "",
+            "maxlength": "",
+            "placeholder": ""
         },
         {
             "key": "field_fa_med_people",
             "label": "People in media",
             "name": "people_in_media",
+            "aria-label": "",
             "type": "relationship",
-            "post_type": ["fa_person"],
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "fa_person"
+            ],
             "taxonomy": [],
-            "filters": ["search"],
+            "filters": [
+                "search"
+            ],
             "return_format": "object",
             "min": "",
             "max": "",
-            "wrapper": {"width": "34", "class": "", "id": ""}
+            "elements": [],
+            "bidirectional_target": []
         },
         {
             "key": "field_fa_med_location",
             "label": "Location",
             "name": "location",
+            "aria-label": "",
             "type": "relationship",
-            "post_type": ["fa_location"],
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "fa_location"
+            ],
             "taxonomy": [],
-            "filters": ["search"],
+            "filters": [
+                "search"
+            ],
             "return_format": "object",
             "min": "",
             "max": 1,
-            "wrapper": {"width": "33", "class": "", "id": ""}
+            "elements": [],
+            "bidirectional_target": []
         },
         {
             "key": "field_fa_med_event",
             "label": "Related event",
             "name": "event",
+            "aria-label": "",
             "type": "relationship",
-            "post_type": ["fa_event"],
+            "instructions": "",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "fa_event"
+            ],
             "taxonomy": [],
-            "filters": ["search"],
+            "filters": [
+                "search"
+            ],
             "return_format": "object",
             "min": "",
             "max": 1,
-            "wrapper": {"width": "33", "class": "", "id": ""}
+            "elements": [],
+            "bidirectional_target": []
         }
     ],
     "location": [
@@ -113,8 +215,14 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "hide_on_screen": ["the_content"],
+    "hide_on_screen": [
+        "the_content"
+    ],
     "active": true,
     "description": "",
-    "show_in_rest": 1
+    "show_in_rest": 1,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1782833364
 }

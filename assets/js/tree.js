@@ -39,6 +39,10 @@
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     function personName(p) {
+        const acf = p.acf || {};
+        if (acf.first_name || acf.last_name) {
+            return [acf.first_name, acf.last_name].filter(Boolean).join(' ');
+        }
         return p.title?.rendered || p.title || '(unknown)';
     }
 

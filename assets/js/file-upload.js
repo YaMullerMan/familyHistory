@@ -106,8 +106,9 @@ class FileUpload {
     // File handling
     // ------------------------------------------------------------------
     async _handleFile(file) {
-        if (!file.type.startsWith('image/')) {
-            this.onError('Please choose an image file (JPG, PNG, WEBP).');
+        const blocked = ['image/heic', 'image/heif'];
+        if (!file.type.startsWith('image/') || blocked.includes(file.type.toLowerCase())) {
+            this.onError('Please choose a JPG, PNG, or WEBP file. HEIC is not supported — convert it first using the Photos app or an online converter.');
             return;
         }
         if (file.size > this.maxMb * 1024 * 1024) {
@@ -160,6 +161,14 @@ class FileUpload {
     getMediaId()    { return this._mediaId; }
     getPreviewUrl() { return this._previewUrl; }
     isUploading()   { return this._uploading; }
+
+    setExisting(mediaId, url) {
+        this._mediaId    = mediaId;
+        this._previewUrl = url;
+        this._previewImg.src   = url;
+        this._innerEl.hidden   = true;
+        this._previewEl.hidden = false;
+    }
 
     reset() { this._clear(); }
 }

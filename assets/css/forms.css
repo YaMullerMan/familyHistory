@@ -208,6 +208,14 @@
     user-select: none;
 }
 
+.fa-toggle-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--border-strong);
+    margin: 0 0.5rem;
+    flex-shrink: 0;
+}
+
 /* ============================================================
    Relationship picker
    ============================================================ */
@@ -283,6 +291,18 @@
     cursor: default;
     font-style: italic;
 }
+.fa-picker__create {
+    padding: 0.45rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    list-style: none;
+    color: var(--color-primary);
+    font-weight: 500;
+    border-top: 0.5px solid var(--border);
+    margin-top: 0.25rem;
+}
+.fa-picker__create:hover { background: var(--color-primary-light); }
 
 /* ============================================================
    Drag-and-drop file upload
@@ -409,7 +429,7 @@
     position: sticky;
     bottom: 0;
     background: var(--surface-2);
-    border-top: 0.5px solid var(--border-strong);
+    /* border-top: 0.5px solid var(--border-strong); */
     padding: 0.875rem var(--page-pad);
     display: flex;
     align-items: center;
@@ -434,4 +454,130 @@
 .fa-btn--lg {
     padding: 0.6rem 1.5rem;
     font-size: 0.9375rem;
+}
+
+/* ============================================================
+   Media type pill picker
+   ============================================================ */
+.fa-type-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: flex-start;
+}
+
+.fa-type-picker__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.fa-type-pill {
+    padding: 0.3rem 0.9rem;
+    border-radius: 100px;
+    border: 0.5px solid var(--border-strong);
+    background: var(--surface-2);
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+    white-space: nowrap;
+}
+.fa-type-pill:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+.fa-type-pill--active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}
+.fa-type-pill--active:hover { color: #fff; }
+
+.fa-type-picker__add-btn {
+    font-size: 0.8125rem;
+    color: var(--color-primary);
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity var(--transition);
+}
+.fa-type-picker__add-btn:hover { opacity: 0.75; }
+
+.fa-type-picker__new {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* ============================================================
+   File attachment row
+   ============================================================ */
+.fa-file-attach {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.fa-file-attach__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong);
+    background: var(--surface-2);
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color var(--transition), color var(--transition);
+}
+.fa-file-attach__label:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.fa-file-attach__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.fa-file-attach__preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.65rem;
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    border-radius: var(--radius);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.fa-file-attach__remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--color-primary-dark);
+    line-height: 1;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity var(--transition);
+}
+.fa-file-attach__remove:hover { opacity: 1; }
+
+.fa-file-attach__uploading {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-style: italic;
 }

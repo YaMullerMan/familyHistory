@@ -1,0 +1,98 @@
+.fa-story-page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding-bottom: 4rem;
+}
+
+/* Cover image */
+.fa-story-cover {
+    width: 100%;
+    max-height: 420px;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    margin-bottom: 2rem;
+}
+.fa-story-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Body */
+.fa-story-body {
+    padding: 0 var(--page-pad);
+}
+
+/* Header */
+.fa-story-header {
+    margin-bottom: 2rem;
+}
+.fa-story-header__title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 1.25rem;
+}
+
+/* Meta rows */
+.fa-story-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface-1);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-card);
+}
+.fa-story-meta__row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 0.5rem;
+    align-items: baseline;
+    font-size: 0.875rem;
+}
+.fa-story-meta__row dt {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+.fa-story-meta__row dd {
+    color: var(--text-primary);
+    margin: 0;
+}
+.fa-story-meta__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+.fa-story-meta__person {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.55rem;
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    border-radius: 100px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity var(--transition);
+}
+.fa-story-meta__person:hover { opacity: 0.8; }
+
+.fa-story-meta__location {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+.fa-story-meta__location + .fa-story-meta__location::before {
+    content: '·';
+    margin-right: 0.35rem;
+    color: var(--text-muted);
+}
+
+/* Story body text — reuses fa-profile-bio prose styles */
+.fa-story-content {
+    border-top: 0.5px solid var(--border);
+    padding-top: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.7;
+}
