@@ -131,8 +131,16 @@
                 });
         });
 
-        // "Add parent" button — only on orphan roots
-        if (isOrphan) {
+        li.appendChild(card);
+
+        // ── Children — pooled from everyone in the couple card ────────────────
+        const childSet = new Set();
+        coupleIds.forEach(pid => {
+            (byId[pid]?.acf?.children || []).forEach(id => { if (inArchive.has(id)) childSet.add(id); });
+        });
+
+        // "Add parent" button — only on truly disconnected orphans (no children in archive)
+        if (isOrphan && childSet.size === 0) {
             const btn = document.createElement('button');
             btn.className = 'fa-tree-card__add-btn';
             btn.title = 'Link to parent in tree';
@@ -145,14 +153,6 @@
             });
             card.appendChild(btn);
         }
-
-        li.appendChild(card);
-
-        // ── Children — pooled from everyone in the couple card ────────────────
-        const childSet = new Set();
-        coupleIds.forEach(pid => {
-            (byId[pid]?.acf?.children || []).forEach(id => { if (inArchive.has(id)) childSet.add(id); });
-        });
 
         const unrendered = [...childSet].filter(id => !rendered.has(id));
         if (unrendered.length) {
@@ -176,9 +176,39 @@
         const parents = p.acf?.parents || [];
         return !parents.some(pid => inArchive.has(pid));
     });
-    roots.sort((a, b) =>
-        (a.acf?.birth_date || '9999').localeCompare(b.acf?.birth_date || '9999')
-    );
+
+    // Count all descendants reachable via the children field.
+    // Used to sort roots: the root with the most descendants (the main family)
+    // renders first, regardless of birth dates or whether sync links are perfect.
+    function countDescendants(person) {
+        let count = 0;
+        const visited = new Set();
+        const queue = (person.acf?.children || []).filter(id => inArchive.has(id)).slice();
+        while (queue.length) {
+            const id = queue.shift();
+            if (visited.has(id)) continue;
+            visited.add(id);
+            count++;
+            const p = byId[id];
+            if (p) (p.acf?.children || []).forEach(cid => { if (!visited.has(cid)) queue.push(cid); });
+        }
+        return count;
+    }
+
+    roots.sort((a, b) => {
+        const diff = countDescendants(b) - countDescendants(a); // more descendants first
+        if (diff !== 0) return diff;
+        return (a.acf?.birth_date || '9999').localeCompare(b.acf?.birth_date || '9999');
+    });
+
+    // A root is a true orphan only if they have NO connections in the archive
+    // (no children, no spouses). A root with any link belongs to the family tree.
+    function isIsolated(person) {
+        const acf = person.acf || {};
+        const hasChildren = (acf.children || []).some(id => inArchive.has(id));
+        const hasSpouses  = (acf.spouses  || []).some(id => inArchive.has(id));
+        return !hasChildren && !hasSpouses;
+    }
 
     const rootUl = document.createElement('ul');
     rootUl.className = 'fa-tree fa-tree--root';
@@ -186,7 +216,7 @@
     let rootsRendered = 0;
     roots.forEach(root => {
         if (rendered.has(root.id)) return;
-        const isOrphan = rootsRendered > 0; // first root is the main family, rest are unconnected
+        const isOrphan = isIsolated(root); // only truly disconnected people get orphan styling
         const node = buildNode(root, isOrphan);
         if (node) { rootUl.appendChild(node); rootsRendered++; }
     });
@@ -395,5 +425,36 @@
             }
         }
     }
+
+    // ── Zoom controls ─────────────────────────────────────────────────────────
+
+    const zoomInBtn  = document.getElementById('fa-tree-zoom-in');
+    const zoomOutBtn = document.getElementById('fa-tree-zoom-out');
+    const zoomLabel  = document.getElementById('fa-tree-zoom-label');
+    const treeScroll = document.querySelector('.fa-tree-scroll');
+
+    let currentZoom = 1;
+    const ZOOM_MIN  = 0.25;
+    const ZOOM_MAX  = 1.5;
+    const ZOOM_STEP = 0.15;
+
+    function applyZoom(z) {
+        currentZoom = Math.round(Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, z)) * 100) / 100;
+        rootUl.style.zoom = currentZoom;
+        zoomLabel.textContent = Math.round(currentZoom * 100) + '%';
+        zoomInBtn.disabled  = currentZoom >= ZOOM_MAX;
+        zoomOutBtn.disabled = currentZoom <= ZOOM_MIN;
+    }
+
+    zoomInBtn.addEventListener('click',  () => applyZoom(currentZoom + ZOOM_STEP));
+    zoomOutBtn.addEventListener('click', () => applyZoom(currentZoom - ZOOM_STEP));
+
+    // Ctrl/Cmd + scroll wheel to zoom
+    treeScroll.addEventListener('wheel', e => {
+        if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            applyZoom(currentZoom + (e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP));
+        }
+    }, { passive: false });
 
 }());

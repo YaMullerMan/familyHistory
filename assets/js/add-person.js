@@ -420,6 +420,13 @@
 
         const titleStr = titleParts.join(' ');
         const postFields = { title: titleStr, fa_branch: branchIds };
+
+        // When editing, merge existing relationship IDs with any newly selected ones.
+        // This ensures a partially-prefilled picker can never erase existing links.
+        // Removal of relationships requires editing the other person's profile or wp-admin.
+        const mergeIds = (prev, next) =>
+            isEditing ? [...new Set([...prev, ...(next || []).map(Number)])] : (next || []);
+
         const acfFields  = {
             first_name:           data.first_name,
             middle_name:          data.middle_name           || '',
@@ -432,9 +439,9 @@
             immigration_location: data.immigration_location  || [],
             death_date:           data.death_date            || '',
             death_location:       data.death_location        || [],
-            parents:              data.parents               || [],
-            spouses:              data.spouses               || [],
-            children:             data.children              || [],
+            parents:              mergeIds(prevRelationships.parents,  data.parents),
+            spouses:              mergeIds(prevRelationships.spouses,  data.spouses),
+            children:             mergeIds(prevRelationships.children, data.children),
             bio:                  data.bio                   || '',
             profile_photo:        data.profile_photo         || existingPhotoId || '',
             current_address:      data.current_address       || '',
