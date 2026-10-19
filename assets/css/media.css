@@ -240,7 +240,7 @@
 }
 
 .fa-media-single__body {
-    padding: 0 var(--page-pad);
+    /* padding: 0 var(--page-pad); */
 }
 
 .fa-media-single__header {
