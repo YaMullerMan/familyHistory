@@ -8,6 +8,19 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<?php
+// Main navigation — shared by the desktop bar and the mobile slide-in menu.
+// 'current' marks the section for the page being viewed.
+$fa_nav_items = [
+    ['label' => 'Home',    'url' => home_url('/'),            'current' => is_front_page()],
+    ['label' => 'Tree',    'url' => home_url('/family-tree'), 'current' => is_page('family-tree')],
+    ['label' => 'People',  'url' => home_url('/people'),      'current' => is_page('people') || is_singular('fa_person')],
+    ['label' => 'Map',     'url' => home_url('/map'),         'current' => is_page('map')],
+    ['label' => 'Media',   'url' => home_url('/media'),       'current' => is_page('media') || is_singular('fa_media')],
+    ['label' => 'Stories', 'url' => home_url('/stories'),     'current' => is_page('stories') || is_singular('fa_story')],
+];
+?>
+
 <header class="fa-nav">
     <div class="fa-nav__inner">
 
@@ -32,12 +45,9 @@
         </a>
 
         <nav class="fa-nav__links" aria-label="Main navigation">
-            <a href="<?php echo esc_url(home_url('/')); ?>"<?php echo is_front_page() ? ' aria-current="page"' : ''; ?>>Home</a>
-            <a href="<?php echo esc_url(home_url('/family-tree')); ?>">Tree</a>
-            <a href="<?php echo esc_url(home_url('/people')); ?>">People</a>
-            <a href="<?php echo esc_url(home_url('/map')); ?>">Map</a>
-            <a href="<?php echo esc_url(home_url('/media')); ?>">Media</a>
-            <a href="<?php echo esc_url(home_url('/stories')); ?>">Stories</a>
+            <?php foreach ($fa_nav_items as $item): ?>
+                <a href="<?php echo esc_url($item['url']); ?>"<?php echo $item['current'] ? ' aria-current="page"' : ''; ?>><?php echo esc_html($item['label']); ?></a>
+            <?php endforeach; ?>
         </nav>
 
         <div class="fa-nav__user">
@@ -58,7 +68,45 @@
             <?php endif; ?>
         </div>
 
+        <button type="button" class="fa-nav__menu-btn" id="fa-mobile-menu-btn"
+                aria-label="Open menu" aria-expanded="false" aria-controls="fa-mobile-menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <path d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+
     </div>
 </header>
+
+<!-- Mobile slide-in menu -->
+<div class="fa-mobile-menu" id="fa-mobile-menu" hidden>
+    <div class="fa-mobile-menu__backdrop" data-close-menu></div>
+    <div class="fa-mobile-menu__panel" role="dialog" aria-modal="true" aria-label="Menu">
+        <div class="fa-mobile-menu__head">
+            <span class="fa-nav__site-name"><?php bloginfo('name'); ?></span>
+            <button type="button" class="fa-mobile-menu__close" aria-label="Close menu" data-close-menu>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18"/>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="fa-mobile-menu__links" aria-label="Main navigation">
+            <?php foreach ($fa_nav_items as $item): ?>
+                <a href="<?php echo esc_url($item['url']); ?>"<?php echo $item['current'] ? ' aria-current="page"' : ''; ?>><?php echo esc_html($item['label']); ?></a>
+            <?php endforeach; ?>
+        </nav>
+
+        <div class="fa-mobile-menu__account">
+            <?php if (is_user_logged_in()) : ?>
+                <span class="fa-mobile-menu__user"><?php echo esc_html(wp_get_current_user()->display_name); ?></span>
+                <a href="<?php echo esc_url(get_edit_profile_url()); ?>">Profile</a>
+                <a href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>">Sign out</a>
+            <?php else : ?>
+                <a href="<?php echo esc_url(wp_login_url()); ?>" class="fa-btn">Sign in</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
 
 <main class="fa-main">

@@ -61,6 +61,14 @@
     position: sticky;
     top: calc(var(--nav-height) + 0.5rem);
 }
+/* Clear the WordPress admin bar too (see main.css) */
+.admin-bar .fa-alpha-letter { top: calc(var(--nav-height) + 32px + 0.5rem); }
+@media (max-width: 782px) {
+    .admin-bar .fa-alpha-letter { top: calc(var(--nav-height) + 46px + 0.5rem); }
+}
+@media (max-width: 600px) {
+    .admin-bar .fa-alpha-letter { top: calc(var(--nav-height) + 0.5rem); }
+}
 
 /* ---- Person list ---- */
 .fa-person-list {
