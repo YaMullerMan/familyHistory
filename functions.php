@@ -1,6 +1,6 @@
 <?php
 
-define('FA_VERSION', '1.1.3');
+define('FA_VERSION', '1.1.7');
 
 // ---------------------------------------------------------------------------
 // Theme setup
@@ -256,6 +256,18 @@ function fa_register_taxonomies() {
 }
 add_action('init', 'fa_register_taxonomies');
 
+// Rebuild rewrite rules once per theme version (and on theme switch) so CPT
+// permalinks like /story/slug/ survive migrations and domain changes.
+add_action('init', function () {
+    if (get_option('fa_rewrite_version') !== FA_VERSION) {
+        flush_rewrite_rules(false);
+        update_option('fa_rewrite_version', FA_VERSION);
+    }
+}, 99);
+add_action('after_switch_theme', function () {
+    delete_option('fa_rewrite_version');
+});
+
 // Seed default media types once (safe to run every request — term_exists is cheap)
 add_action('init', function () {
     $defaults = ['Photo', 'Document', 'Video', 'Certificate', 'Newspaper Clipping'];
@@ -323,6 +335,28 @@ function fa_register_acf_rest_fields() {
     }
 }
 add_action('rest_api_init', 'fa_register_acf_rest_fields');
+
+// ---------------------------------------------------------------------------
+// Profile photo helpers — focal point is a CSS object-position like "50% 30%"
+// ---------------------------------------------------------------------------
+function fa_photo_focal_point($person_id) {
+    $point = (string) get_field('photo_focal_point', $person_id);
+    return preg_match('/^\d{1,3}% \d{1,3}%$/', $point) ? $point : '';
+}
+
+// style="" attribute for an <img>, or empty string when no focal point is set
+function fa_photo_focal_attr($person_id) {
+    $point = fa_photo_focal_point($person_id);
+    return $point ? ' style="object-position:' . esc_attr($point) . '"' : '';
+}
+
+// Small avatar URL. WP's thumbnail size is pre-cropped to the centre, so use
+// the uncropped medium size when a focal point needs to be honoured.
+function fa_photo_thumb_url($photo, $person_id) {
+    if (!$photo) return null;
+    $size = fa_photo_focal_point($person_id) ? 'medium' : 'thumbnail';
+    return $photo['sizes'][$size] ?? $photo['url'];
+}
 
 // ---------------------------------------------------------------------------
 // Member role — can create/edit their own fa_* posts, cannot access wp-admin

@@ -122,6 +122,15 @@
             "wrapper": {"width": "20", "class": "", "id": ""}
         },
         {
+            "key": "field_fa_per_photo_focal_point",
+            "label": "Photo focal point",
+            "name": "photo_focal_point",
+            "type": "text",
+            "instructions": "CSS object-position, e.g. \"50% 30%\". Set from the front-end edit form.",
+            "default_value": "",
+            "wrapper": {"width": "20", "class": "", "id": ""}
+        },
+        {
             "key": "field_fa_per_bio",
             "label": "Bio",
             "name": "bio",

@@ -1,5 +1,9 @@
 (function () {
 
+    const editId = parseInt(
+        document.getElementById('fa-media-form').dataset.editId || '0', 10
+    );
+
     // ── Relationship pickers ──────────────────────────────────────────────────
 
     const peoplePicker = new RelationshipPicker(
@@ -152,13 +156,14 @@
         if (e.key === 'Escape') typeNewCancel.click();
     });
 
-    loadTypePills();
+    const typePillsLoaded = loadTypePills();
 
     // ── Multi-step form ───────────────────────────────────────────────────────
 
     new MultiStepForm({
         formEl:      document.getElementById('fa-media-form'),
-        submitLabel: 'Save to archive',
+        clickableSteps: editId > 0,
+        submitLabel: editId ? 'Save changes' : 'Save to archive',
         steps: [
             {
                 label: 'Upload',
@@ -206,6 +211,67 @@
         },
     });
 
+    // ── Edit mode — pre-fill form with existing media data ──────────────────
+
+    if (editId) {
+        prefillForm(editId);
+    }
+
+    async function fetchTitles(postType, ids) {
+        if (!ids || !ids.length) return [];
+        const posts = await Promise.all(
+            ids.map(id => FA.getPost(postType, id).catch(() => null))
+        );
+        return posts.filter(Boolean).map(p => ({
+            id:    p.id,
+            title: p.title?.rendered || p.title || '(unknown)',
+        }));
+    }
+
+    async function prefillForm(id) {
+        try {
+            const item = await FA.getPost('media', id);
+            const acf  = item.acf || {};
+
+            const [people, locations, events] = await Promise.all([
+                fetchTitles('person',   acf.people_in_media || []),
+                fetchTitles('location', acf.location        || []),
+                fetchTitles('event',    acf.event           || []),
+            ]);
+
+            const titleEl = document.createElement('div');
+            titleEl.innerHTML = item.title?.rendered || '';
+            document.getElementById('media_title').value = titleEl.textContent;
+            document.getElementById('date_circa').value  = acf.date_circa || '';
+            document.getElementById('caption').value     = acf.caption    || '';
+
+            peoplePicker.setValues(people);
+            locationPicker.setValues(locations);
+            eventPicker.setValues(events);
+
+            if (acf.photo && acf.photo.id) {
+                const url = acf.photo.sizes?.medium || acf.photo.url;
+                photoUpload.setExisting(acf.photo.id, url);
+            }
+
+            if (acf.file && acf.file.id) {
+                attachedFileId        = acf.file.id;
+                fileName.textContent  = acf.file.filename || acf.file.title || 'Attached file';
+                filePreview.hidden    = false;
+                fileLabel.style.display = 'none';
+            }
+
+            // Media type — wait for the pills to render, then mark the current one
+            await typePillsLoaded;
+            const typeId = item.fa_media_type?.[0];
+            const pill   = typeId && pillsContainer.querySelector(`.fa-type-pill[data-id="${typeId}"]`);
+            if (pill) selectType(typeId, pill.dataset.name, pill);
+
+        } catch (err) {
+            console.error('Edit prefill failed:', err);
+        }
+    }
+
     // ── Review summary ────────────────────────────────────────────────────────
 
     function esc(s) {
@@ -244,6 +310,7 @@
 
     async function submitMedia(data) {
         const successEl = document.getElementById('fa-submit-success');
+        const isEditing = editId > 0;
 
         const postFields = { title: data.media_title };
         if (data.media_type_id) {
@@ -260,23 +327,28 @@
             event:          data.event           || [],
         };
 
-        const result = await FA.createPost('media', postFields, acfFields);
+        const result = isEditing
+            ? await FA.updatePost('media', editId, postFields, acfFields)
+            : await FA.createPost('media', postFields, acfFields);
 
         document.getElementById('fa-form-nav').hidden = true;
 
         const title = result.title?.rendered || data.media_title;
-        successEl.innerHTML = `
-            <strong>${esc(title)}</strong> has been added to the archive.<br><br>
-            <a href="${esc(result.link)}" class="fa-btn fa-btn--primary fa-btn--sm">View item</a>
-            &nbsp;
-            <a href="" id="fa-add-another" class="fa-btn fa-btn--secondary fa-btn--sm">Add another</a>
-        `;
+        successEl.innerHTML = isEditing
+            ? `<strong>${esc(title)}</strong> has been updated.<br><br>
+               <a href="${esc(result.link)}" class="fa-btn fa-btn--primary fa-btn--sm">View item</a>`
+            : `<strong>${esc(title)}</strong> has been added to the archive.<br><br>
+               <a href="${esc(result.link)}" class="fa-btn fa-btn--primary fa-btn--sm">View item</a>
+               &nbsp;
+               <a href="" id="fa-add-another" class="fa-btn fa-btn--secondary fa-btn--sm">Add another</a>`;
         successEl.hidden = false;
 
-        document.getElementById('fa-add-another').addEventListener('click', e => {
-            e.preventDefault();
-            window.location.reload();
-        });
+        if (!isEditing) {
+            document.getElementById('fa-add-another').addEventListener('click', e => {
+                e.preventDefault();
+                window.location.reload();
+            });
+        }
     }
 
 }());

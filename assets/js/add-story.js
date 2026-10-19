@@ -1,5 +1,12 @@
 (function () {
 
+    const editId = parseInt(
+        document.getElementById('fa-story-form').dataset.editId || '0', 10
+    );
+
+    // Existing cover image ID preserved when editing without re-uploading
+    let existingCoverId = null;
+
     // ── Relationship pickers ──────────────────────────────────────────────────
 
     const authorPicker = new RelationshipPicker(
@@ -47,7 +54,8 @@
 
     new MultiStepForm({
         formEl:      document.getElementById('fa-story-form'),
-        submitLabel: 'Save story',
+        clickableSteps: editId > 0,
+        submitLabel: editId ? 'Save changes' : 'Save story',
         steps: [
             {
                 label: 'Write',
@@ -103,6 +111,67 @@
             await submitStory(data);
         },
     });
+
+    // ── Edit mode — pre-fill form with existing story data ──────────────────
+
+    if (editId) {
+        prefillForm(editId);
+    }
+
+    async function fetchTitles(postType, ids) {
+        if (!ids || !ids.length) return [];
+        const posts = await Promise.all(
+            ids.map(id => FA.getPost(postType, id).catch(() => null))
+        );
+        return posts.filter(Boolean).map(p => ({
+            id:    p.id,
+            title: p.title?.rendered || p.title || '(unknown)',
+        }));
+    }
+
+    async function prefillForm(id) {
+        try {
+            const story = await FA.getPost('story', id);
+            const acf   = story.acf || {};
+
+            const [authors, people, locations] = await Promise.all([
+                fetchTitles('person',   acf.author_person      || []),
+                fetchTitles('person',   acf.people_featured    || []),
+                fetchTitles('location', acf.locations_featured || []),
+            ]);
+
+            document.getElementById('story_title').value = htmlToPlainText(story.title?.rendered || '');
+            document.getElementById('story_date').value  = acf.story_date || '';
+            contentEl.value = htmlToPlainText(acf.story_content || '');
+            updateWordCount();
+
+            authorPicker.setValues(authors);
+            peoplePicker.setValues(people);
+            locationsPicker.setValues(locations);
+
+            if (acf.cover_image && acf.cover_image.id) {
+                const url = acf.cover_image.sizes?.medium || acf.cover_image.url;
+                coverUpload.setExisting(acf.cover_image.id, url);
+                existingCoverId = acf.cover_image.id;
+            }
+
+        } catch (err) {
+            console.error('Edit prefill failed:', err);
+        }
+    }
+
+    // HTML → plain text (for pre-filling the story textarea)
+    function htmlToPlainText(html) {
+        if (!html) return '';
+        const s = html
+            .replace(/<\/p>\s*<p>/gi, '\n\n')
+            .replace(/<p>/gi, '')
+            .replace(/<\/p>/gi, '')
+            .replace(/<br\s*\/?>/gi, '\n');
+        const div = document.createElement('div');
+        div.innerHTML = s;
+        return div.textContent.trim();
+    }
 
     // ── Review summary ────────────────────────────────────────────────────────
 
@@ -162,35 +231,40 @@
 
     async function submitStory(data) {
         const successEl = document.getElementById('fa-submit-success');
+        const isEditing = editId > 0;
 
-        const result = await FA.createPost(
-            'story',
-            { title: data.story_title },
-            {
-                story_content:      autoP(data.story_content),
-                story_date:         data.story_date         || '',
-                author_person:      data.author_person      || [],
-                people_featured:    data.people_featured    || [],
-                locations_featured: data.locations_featured || [],
-                cover_image:        data.cover_image        || '',
-            }
-        );
+        const postFields = { title: data.story_title };
+        const acfFields  = {
+            story_content:      autoP(data.story_content),
+            story_date:         data.story_date         || '',
+            author_person:      data.author_person      || [],
+            people_featured:    data.people_featured    || [],
+            locations_featured: data.locations_featured || [],
+            cover_image:        data.cover_image        || existingCoverId || '',
+        };
+
+        const result = isEditing
+            ? await FA.updatePost('story', editId, postFields, acfFields)
+            : await FA.createPost('story', postFields, acfFields);
 
         document.getElementById('fa-form-nav').hidden = true;
 
         const title = result.title?.rendered || data.story_title;
-        successEl.innerHTML = `
-            <strong>${esc(title)}</strong> has been saved to the archive.<br><br>
-            <a href="${esc(result.link)}" class="fa-btn fa-btn--primary fa-btn--sm">Read story</a>
-            &nbsp;
-            <a href="" id="fa-add-another" class="fa-btn fa-btn--secondary fa-btn--sm">Write another</a>
-        `;
+        successEl.innerHTML = isEditing
+            ? `<strong>${esc(title)}</strong> has been updated.<br><br>
+               <a href="${esc(result.link)}" class="fa-btn fa-btn--primary fa-btn--sm">Read story</a>`
+            : `<strong>${esc(title)}</strong> has been saved to the archive.<br><br>
+               <a href="${esc(result.link)}" class="fa-btn fa-btn--primary fa-btn--sm">Read story</a>
+               &nbsp;
+               <a href="" id="fa-add-another" class="fa-btn fa-btn--secondary fa-btn--sm">Write another</a>`;
         successEl.hidden = false;
 
-        document.getElementById('fa-add-another').addEventListener('click', e => {
-            e.preventDefault();
-            window.location.reload();
-        });
+        if (!isEditing) {
+            document.getElementById('fa-add-another').addEventListener('click', e => {
+                e.preventDefault();
+                window.location.reload();
+            });
+        }
     }
 
 }());

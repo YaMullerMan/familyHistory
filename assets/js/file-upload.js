@@ -10,6 +10,7 @@
  *     maxMb: 10,
  *     onUpload: (mediaObj) => { ... },
  *     onError:  (msg)      => { ... },
+ *     onRemove: ()         => { ... },
  *   });
  *   uploader.getMediaId();    // WP attachment ID or null
  *   uploader.getPreviewUrl(); // object URL or source_url
@@ -23,6 +24,7 @@ class FileUpload {
         this.maxMb      = options.maxMb   || 10;
         this.onUpload   = options.onUpload || (() => {});
         this.onError    = options.onError  || (() => {});
+        this.onRemove   = options.onRemove || (() => {});
 
         this._mediaId    = null;
         this._previewUrl = null;
@@ -99,7 +101,7 @@ class FileUpload {
             if (file) this._handleFile(file);
         });
 
-        this._removeBtn.addEventListener('click', () => this._clear());
+        this._removeBtn.addEventListener('click', () => { this._clear(); this.onRemove(); });
     }
 
     // ------------------------------------------------------------------

@@ -34,7 +34,37 @@
 
     const byId      = {};
     all.forEach(p => { byId[p.id] = p; });
-    const inArchive = new Set(all.map(p => p.id));
+
+    // Former spouses who only connect to the family through that former marriage
+    // are left out of the tree (they still appear on profiles). Someone with
+    // parents or a current spouse in the archive stays in, even if they have an ex.
+    const allIds = new Set(all.map(p => p.id));
+
+    // Former-spouse links in either direction (the data isn't always synced both ways)
+    const formerOf = {};
+    all.forEach(p => { formerOf[p.id] = new Set(); });
+    all.forEach(p => {
+        (p.acf?.former_spouses || []).forEach(id => {
+            if (!allIds.has(id)) return;
+            formerOf[p.id].add(id);
+            formerOf[id].add(p.id);
+        });
+    });
+
+    // Current spouses, ignoring anyone also marked as a former spouse
+    function currentSpouses(p) {
+        return (p.acf?.spouses || []).filter(id => allIds.has(id) && !formerOf[p.id].has(id));
+    }
+
+    function isAnchored(p) {
+        return (p.acf?.parents || []).some(id => allIds.has(id)) || currentSpouses(p).length > 0;
+    }
+
+    const hiddenIds = new Set(all.filter(p =>
+        !isAnchored(p) && [...formerOf[p.id]].some(id => isAnchored(byId[id]))
+    ).map(p => p.id));
+
+    const inArchive = new Set(all.filter(p => !hiddenIds.has(p.id)).map(p => p.id));
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -107,7 +137,7 @@
         const coupleIds = new Set([person.id]);
 
         // Direct spouses of this person
-        const directSpouseIds = (person.acf?.spouses || [])
+        const directSpouseIds = currentSpouses(person)
             .filter(id => inArchive.has(id) && !rendered.has(id));
 
         directSpouseIds.forEach(sid => {
@@ -161,6 +191,7 @@
     // ── Roots ─────────────────────────────────────────────────────────────────
 
     const roots = all.filter(p => {
+        if (hiddenIds.has(p.id)) return false;
         const parents = p.acf?.parents || [];
         return !parents.some(pid => inArchive.has(pid));
     });
@@ -374,7 +405,7 @@
         if (q.length < 2) { searchResults.hidden = true; return; }
 
         searchTimer = setTimeout(() => {
-            const matches = all.filter(p => personName(p).toLowerCase().includes(q)).slice(0, 8);
+            const matches = all.filter(p => !hiddenIds.has(p.id) && personName(p).toLowerCase().includes(q)).slice(0, 8);
             if (!matches.length) { searchResults.hidden = true; return; }
 
             matches.forEach(p => {

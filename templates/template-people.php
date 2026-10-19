@@ -80,7 +80,7 @@ get_header();
                         $branches   = get_the_terms($pid, 'fa_branch') ?: [];
                         $birth_year = $birth ? substr($birth, 0, 4) : null;
                         $death_year = $death ? substr($death, 0, 4) : null;
-                        $thumb      = $photo ? ($photo['sizes']['thumbnail'] ?? $photo['url']) : null;
+                        $thumb      = fa_photo_thumb_url($photo, $pid);
                         $initials   = strtoupper(($first ? $first[0] : '') . ($last ? $last[0] : ''));
                         $full_name  = implode(' ', array_filter([$first, $last])) ?: get_the_title($pid);
                     ?>
@@ -89,7 +89,7 @@ get_header();
 
                                 <span class="fa-person-row__avatar">
                                     <?php if ($thumb): ?>
-                                        <img src="<?php echo esc_url($thumb); ?>" alt="">
+                                        <img src="<?php echo esc_url($thumb); ?>" alt=""<?php echo fa_photo_focal_attr($pid); ?>>
                                     <?php else: ?>
                                         <span class="fa-person-row__initials"><?php echo esc_html($initials ?: '?'); ?></span>
                                     <?php endif; ?>

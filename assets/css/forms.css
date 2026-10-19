@@ -37,6 +37,20 @@
 .fa-stepper__step--active { opacity: 1; }
 .fa-stepper__step--done   { opacity: 0.65; }
 
+/* Edit mode — steps can be clicked to jump straight to them */
+.fa-stepper--clickable .fa-stepper__step:not(.fa-stepper__step--active) {
+    cursor: pointer;
+}
+.fa-stepper--clickable .fa-stepper__step:not(.fa-stepper__step--active):hover,
+.fa-stepper--clickable .fa-stepper__step:focus-visible {
+    opacity: 1;
+}
+.fa-stepper--clickable .fa-stepper__step:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
 .fa-stepper__num {
     width: 26px;
     height: 26px;
@@ -380,6 +394,67 @@
     transition: background var(--transition);
 }
 .fa-dropzone__remove:hover { background: rgba(0,0,0,0.75); }
+
+/* Photo focal point editor */
+.fa-focal {
+    margin-top: 1rem;
+    text-align: center;
+}
+.fa-focal[hidden],
+.fa-focal__editor[hidden] { display: none; }
+.fa-focal__editor {
+    text-align: left;
+}
+.fa-focal__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1.25rem;
+    margin: 0.75rem 0 1rem;
+}
+.fa-focal__stage {
+    position: relative;
+    display: inline-block;
+    max-width: 320px;
+    cursor: crosshair;
+    line-height: 0;
+}
+.fa-focal__stage img {
+    max-width: 100%;
+    max-height: 360px;
+    border-radius: var(--radius);
+    display: block;
+}
+.fa-focal__marker {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1.5px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35);
+    pointer-events: none;
+}
+.fa-focal__marker[hidden] { display: none; }
+.fa-focal__previews {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+.fa-focal__preview {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border-strong);
+    display: block;
+}
+.fa-focal__preview--circle {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+}
 
 .fa-dropzone__uploading {
     padding: 1.5rem;

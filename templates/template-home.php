@@ -139,7 +139,7 @@ get_header();
         <div class="fa-section-header">
             <h2 id="fa-actions-heading">Quick actions</h2>
         </div>
-        <div class="fa-grid-5">
+        <div class="fa-grid-3">
 
             <a href="<?php echo esc_url(home_url('/add-person')); ?>" class="fa-tile">
                 <span class="fa-tile__icon" aria-hidden="true">
@@ -148,10 +148,10 @@ get_header();
                     </svg>
                 </span>
                 <span class="fa-tile__name">Add a person</span>
-                <span class="fa-tile__desc">Record a family member's details, dates, and relationships.</span>
+                <span class="fa-tile__desc">Record a family member's dates, photo, and relationships.</span>
             </a>
 
-            <a href="<?php echo esc_url(home_url('/family-tree')); ?>" class="fa-tile">
+            <!-- <a href="<?php echo esc_url(home_url('/family-tree')); ?>" class="fa-tile">
                 <span class="fa-tile__icon" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
                         <circle cx="12" cy="5"  r="2.5" fill="currentColor" stroke="none"/>
@@ -164,9 +164,9 @@ get_header();
                 </span>
                 <span class="fa-tile__name">View the tree</span>
                 <span class="fa-tile__desc">Explore the interactive family tree and navigate relationships.</span>
-            </a>
+            </a> -->
 
-            <a href="<?php echo esc_url(home_url('/map')); ?>" class="fa-tile">
+            <!-- <a href="<?php echo esc_url(home_url('/map')); ?>" class="fa-tile">
                 <span class="fa-tile__icon" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -174,7 +174,7 @@ get_header();
                 </span>
                 <span class="fa-tile__name">View by location</span>
                 <span class="fa-tile__desc">Browse family history on an interactive map.</span>
-            </a>
+            </a> -->
 
             <a href="<?php echo esc_url(home_url('/upload-media')); ?>" class="fa-tile">
                 <span class="fa-tile__icon" aria-hidden="true">
@@ -193,7 +193,7 @@ get_header();
                     </svg>
                 </span>
                 <span class="fa-tile__name">Write a story</span>
-                <span class="fa-tile__desc">Preserve a memory, biography chapter, or family narrative.</span>
+                <span class="fa-tile__desc">Preserve a memory, biography, or family narrative.</span>
             </a>
 
         </div>

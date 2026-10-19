@@ -57,7 +57,8 @@
     const photoUpload = new FileUpload(
         document.getElementById('photo-dropzone'),
         {
-            onUpload: () => {},
+            onUpload: () => showFocalSection(photoUpload.getPreviewUrl(), ''),
+            onRemove: () => hideFocalSection(),
             onError:  (msg) => {
                 const el = document.getElementById('photo-upload-error');
                 el.textContent = msg;
@@ -65,6 +66,67 @@
             },
         }
     );
+
+    // ----------------------------------------------------------------
+    // Photo focal point — stored as a CSS object-position ("x% y%")
+    // ----------------------------------------------------------------
+    let focalPoint = '';
+
+    const focalSection  = document.getElementById('focal-section');
+    const focalAddBtn   = document.getElementById('focal-add-btn');
+    const focalEditor   = document.getElementById('focal-editor');
+    const focalStage    = document.getElementById('focal-stage');
+    const focalImg      = document.getElementById('focal-img');
+    const focalMarker   = document.getElementById('focal-marker');
+    const focalClearBtn = document.getElementById('focal-clear-btn');
+    const focalPreviews = [
+        document.getElementById('focal-preview-circle'),
+        document.getElementById('focal-preview-square'),
+    ];
+
+    function showFocalSection(url, point) {
+        focalImg.src = url;
+        focalPreviews.forEach(img => { img.src = url; });
+        setFocalPoint(point);
+        focalSection.hidden = false;
+        focalEditor.hidden  = !point;
+        focalAddBtn.hidden  = !!point;
+    }
+
+    function hideFocalSection() {
+        setFocalPoint('');
+        focalSection.hidden = true;
+    }
+
+    function setFocalPoint(point) {
+        focalPoint = point || '';
+        const [x, y] = focalPoint ? focalPoint.split(' ') : [];
+        focalMarker.hidden = !focalPoint;
+        if (focalPoint) {
+            focalMarker.style.left = x;
+            focalMarker.style.top  = y;
+        }
+        focalPreviews.forEach(img => { img.style.objectPosition = focalPoint || ''; });
+    }
+
+    focalAddBtn.addEventListener('click', () => {
+        focalAddBtn.hidden = true;
+        focalEditor.hidden = false;
+    });
+
+    focalStage.addEventListener('click', (e) => {
+        const rect = focalImg.getBoundingClientRect();
+        const clamp = v => Math.min(100, Math.max(0, Math.round(v)));
+        const x = clamp((e.clientX - rect.left) / rect.width  * 100);
+        const y = clamp((e.clientY - rect.top)  / rect.height * 100);
+        setFocalPoint(`${x}% ${y}%`);
+    });
+
+    focalClearBtn.addEventListener('click', () => {
+        setFocalPoint('');
+        focalEditor.hidden = true;
+        focalAddBtn.hidden = false;
+    });
 
     // ----------------------------------------------------------------
     // Status toggles
@@ -114,6 +176,7 @@
     // ----------------------------------------------------------------
     new MultiStepForm({
         formEl:      document.getElementById('fa-person-form'),
+        clickableSteps: editId > 0,
         submitLabel: 'Save person',
         steps: [
             {
@@ -172,8 +235,9 @@
                 },
                 collect() {
                     return {
-                        profile_photo: photoUpload.getMediaId(),
-                        _photoUrl:     photoUpload.getPreviewUrl(),
+                        profile_photo:     photoUpload.getMediaId(),
+                        photo_focal_point: photoUpload.getMediaId() ? focalPoint : '',
+                        _photoUrl:         photoUpload.getPreviewUrl(),
                     };
                 },
             },
@@ -288,6 +352,7 @@
                 const url = acf.profile_photo.sizes?.medium || acf.profile_photo.url;
                 photoUpload.setExisting(acf.profile_photo.id, url);
                 existingPhotoId = acf.profile_photo.id;
+                showFocalSection(url, acf.photo_focal_point || '');
             }
 
         } catch (err) {
@@ -339,7 +404,7 @@
             {
                 label: 'Photo',
                 value: data._photoUrl
-                    ? `<img src="${esc(data._photoUrl)}" class="fa-review__photo" alt="Profile photo">`
+                    ? `<img src="${esc(data._photoUrl)}" class="fa-review__photo" alt="Profile photo"${data.photo_focal_point ? ` style="object-position:${esc(data.photo_focal_point)}"` : ''}>`
                     : null,
                 html: true,
             },
@@ -372,7 +437,7 @@
     // ----------------------------------------------------------------
     async function createLocation(query, locationType) {
         const [rawCity, rawState] = query.split(',').map(s => s.trim());
-        const coords = await geocodeAddress('', rawCity, rawState || '', '');
+        const coords = await geocodePlace(query);
         const loc = await FA.createPost('location',
             { title: query },
             {
@@ -404,6 +469,24 @@
                 return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
             }
         } catch (_) { /* non-critical — map pin just won't appear until re-saved */ }
+        return null;
+    }
+
+    // Worldwide lookup for birth/burial/immigration places, which may be
+    // outside the US or just a country ("Germany"). Include the state for
+    // US towns that share a name with somewhere abroad ("Paris, TX").
+    async function geocodePlace(query) {
+        if (!query) return null;
+        try {
+            const res = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`,
+                { headers: { 'Accept-Language': 'en-US' } }
+            );
+            const data = await res.json();
+            if (data.length) {
+                return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+            }
+        } catch (_) { /* non-critical — the map retries locations without coordinates */ }
         return null;
     }
 
@@ -469,6 +552,7 @@
             children:             mergeIds(prevRelationships.children,       data.children),
             bio:                  data.bio                   || '',
             profile_photo:        data.profile_photo         || existingPhotoId || '',
+            photo_focal_point:    data.photo_focal_point     || '',
             current_address:      data.current_address       || '',
             current_city:         data.current_city          || '',
             current_state:        data.current_state         || '',

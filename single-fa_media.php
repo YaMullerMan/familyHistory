@@ -43,10 +43,29 @@ get_header();
     <div class="fa-media-single__body">
 
         <header class="fa-media-single__header">
-            <?php if ($type): ?>
-            <span class="fa-media-single__type"><?php echo esc_html($type_labels[$type] ?? $type); ?></span>
+            <div class="fa-media-single__header-text">
+                <?php if ($type): ?>
+                <span class="fa-media-single__type"><?php echo esc_html($type_labels[$type] ?? $type); ?></span>
+                <?php endif; ?>
+                <h1 class="fa-media-single__title"><?php echo esc_html($title); ?></h1>
+            </div>
+
+            <?php if (current_user_can('edit_post', $media_id)):
+                $add_media_pages = get_posts([
+                    'post_type'      => 'page',
+                    'posts_per_page' => 1,
+                    'meta_key'       => '_wp_page_template',
+                    'meta_value'     => 'templates/template-add-media.php',
+                    'fields'         => 'ids',
+                ]);
+                $edit_url = $add_media_pages
+                    ? add_query_arg('edit', $media_id, get_permalink($add_media_pages[0]))
+                    : get_edit_post_link($media_id);
+            ?>
+                <div class="fa-media-single__actions">
+                    <a href="<?php echo esc_url($edit_url); ?>" class="fa-btn fa-btn--secondary fa-btn--sm">Edit</a>
+                </div>
             <?php endif; ?>
-            <h1 class="fa-media-single__title"><?php echo esc_html($title); ?></h1>
         </header>
 
         <dl class="fa-story-meta">

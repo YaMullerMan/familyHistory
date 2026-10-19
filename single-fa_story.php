@@ -30,7 +30,26 @@ get_header();
     <div class="fa-story-body">
 
         <header class="fa-story-header">
-            <h1 class="fa-story-header__title"><?php echo esc_html($title); ?></h1>
+            <div class="fa-story-header__top">
+                <h1 class="fa-story-header__title"><?php echo esc_html($title); ?></h1>
+
+                <?php if (current_user_can('edit_post', $story_id)):
+                    $add_story_pages = get_posts([
+                        'post_type'      => 'page',
+                        'posts_per_page' => 1,
+                        'meta_key'       => '_wp_page_template',
+                        'meta_value'     => 'templates/template-add-story.php',
+                        'fields'         => 'ids',
+                    ]);
+                    $edit_url = $add_story_pages
+                        ? add_query_arg('edit', $story_id, get_permalink($add_story_pages[0]))
+                        : get_edit_post_link($story_id);
+                ?>
+                    <div class="fa-profile-actions">
+                        <a href="<?php echo esc_url($edit_url); ?>" class="fa-btn fa-btn--secondary fa-btn--sm">Edit</a>
+                    </div>
+                <?php endif; ?>
+            </div>
 
             <dl class="fa-story-meta">
 

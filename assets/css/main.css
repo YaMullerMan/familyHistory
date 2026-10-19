@@ -166,9 +166,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .fa-nav__links a {
-    padding: 0.3rem 0.65rem;
+    padding: 0.3rem 0.85rem;
     border-radius: var(--radius);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
     text-decoration: none;
     transition: background var(--transition), color var(--transition);

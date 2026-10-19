@@ -80,7 +80,7 @@ function fa_p_fmt_date($d) {
 function fa_p_person_card($p) {
     if (!($p instanceof WP_Post)) return '';
     $photo    = get_field('profile_photo', $p->ID);
-    $img_url  = $photo ? ($photo['sizes']['thumbnail'] ?? $photo['url']) : null;
+    $img_url  = fa_photo_thumb_url($photo, $p->ID);
     $by       = get_field('birth_date', $p->ID);
     $dy       = get_field('death_date', $p->ID);
     $by       = $by ? substr($by, 0, 4) : null;
@@ -94,7 +94,7 @@ function fa_p_person_card($p) {
     <a href="<?php echo esc_url(get_permalink($p->ID)); ?>" class="fa-person-card">
         <span class="fa-person-card__photo">
             <?php if ($img_url): ?>
-                <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title($p->ID)); ?>">
+                <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title($p->ID)); ?>"<?php echo fa_photo_focal_attr($p->ID); ?>>
             <?php else: ?>
                 <span class="fa-person-card__initials"><?php echo esc_html($ini ?: '?'); ?></span>
             <?php endif; ?>
@@ -135,7 +135,7 @@ get_header();
             <?php if ($photo && !empty($photo['url'])): ?>
                 <img src="<?php echo esc_url($photo['sizes']['medium'] ?? $photo['url']); ?>"
                      alt="<?php echo esc_attr($display_name); ?>"
-                     class="fa-profile-photo__img">
+                     class="fa-profile-photo__img"<?php echo fa_photo_focal_attr($person_id); ?>>
             <?php else: ?>
                 <span class="fa-profile-photo__initials"><?php echo esc_html($initials ?: '?'); ?></span>
             <?php endif; ?>

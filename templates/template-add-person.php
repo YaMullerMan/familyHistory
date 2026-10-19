@@ -214,6 +214,26 @@ get_header();
                 <p class="fa-form-hint">Helps identify this person across the archive. Optional.</p>
                 <div id="photo-dropzone" class="fa-dropzone"></div>
                 <div id="photo-upload-error" class="fa-notice fa-notice--error" style="margin-top:0.75rem;" hidden></div>
+
+                <div id="focal-section" class="fa-focal" hidden>
+                    <button type="button" class="fa-btn fa-btn--secondary fa-btn--sm" id="focal-add-btn">Add focal point</button>
+
+                    <div id="focal-editor" class="fa-focal__editor" hidden>
+                        <p class="fa-form-hint">Click the part of the photo that should stay in view when it's cropped — usually the face.</p>
+                        <div class="fa-focal__row">
+                            <div class="fa-focal__stage" id="focal-stage">
+                                <img id="focal-img" alt="Click to set the focal point">
+                                <span class="fa-focal__marker" id="focal-marker" hidden></span>
+                            </div>
+                            <div class="fa-focal__previews">
+                                <span class="fa-label">Preview</span>
+                                <img id="focal-preview-circle" class="fa-focal__preview fa-focal__preview--circle" alt="">
+                                <img id="focal-preview-square" class="fa-focal__preview" alt="">
+                            </div>
+                        </div>
+                        <button type="button" class="fa-btn fa-btn--secondary fa-btn--sm" id="focal-clear-btn">Remove focal point</button>
+                    </div>
+                </div>
             </div>
         </div><!-- /step 3 -->
 

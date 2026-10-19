@@ -35,7 +35,7 @@
             <a href="<?php echo esc_url(home_url('/')); ?>"<?php echo is_front_page() ? ' aria-current="page"' : ''; ?>>Home</a>
             <a href="<?php echo esc_url(home_url('/family-tree')); ?>">Tree</a>
             <a href="<?php echo esc_url(home_url('/people')); ?>">People</a>
-            <a href="<?php echo esc_url(home_url('/map')); ?>">Places</a>
+            <a href="<?php echo esc_url(home_url('/map')); ?>">Map</a>
             <a href="<?php echo esc_url(home_url('/media')); ?>">Media</a>
             <a href="<?php echo esc_url(home_url('/stories')); ?>">Stories</a>
         </nav>

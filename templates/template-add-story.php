@@ -6,14 +6,19 @@ if (!is_user_logged_in()) {
     exit;
 }
 
+$edit_id = isset($_GET['edit']) ? absint($_GET['edit']) : 0;
+if ($edit_id && (get_post_type($edit_id) !== 'fa_story' || !current_user_can('edit_post', $edit_id))) {
+    $edit_id = 0;
+}
+
 get_header();
 ?>
 
 <div class="fa-page fa-add-story">
 
     <div class="fa-form-page-header">
-        <h1>Write a story</h1>
-        <p>Preserve a memory, anecdote, or piece of family history in your own words.</p>
+        <h1><?php echo $edit_id ? 'Edit story' : 'Write a story'; ?></h1>
+        <p><?php echo $edit_id ? 'Update this story\'s details.' : 'Preserve a memory, anecdote, or piece of family history in your own words.'; ?></p>
     </div>
 
     <!-- Step indicator -->
@@ -39,7 +44,7 @@ get_header();
         </div>
     </div>
 
-    <form id="fa-story-form" novalidate>
+    <form id="fa-story-form" novalidate data-edit-id="<?php echo esc_attr($edit_id); ?>">
 
         <!-- ================================================================
              Step 1 — Write
@@ -125,7 +130,7 @@ get_header();
         <div class="fa-step-panel" data-step="3" hidden>
             <div class="fa-card">
                 <h2 class="fa-form-section-title">Review &amp; save</h2>
-                <p class="fa-form-hint">Check the details below, then save to add this story to the archive.</p>
+                <p class="fa-form-hint"><?php echo $edit_id ? 'Check the details below, then save your changes.' : 'Check the details below, then save to add this story to the archive.'; ?></p>
                 <div id="fa-review-summary"></div>
                 <div id="fa-submit-success" class="fa-notice fa-notice--success" style="margin-top:1rem;" hidden></div>
             </div>

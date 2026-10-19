@@ -7,7 +7,7 @@ get_header();
 // active_default controls which types are visible on initial load
 $map_types = [
     'residence'   => ['label' => 'Residence',   'color' => '#2563eb', 'active' => true],
-    'birthplace'  => ['label' => 'Birthplace',  'color' => '#3B6D11', 'active' => false],
+    'birthplace'  => ['label' => 'Birthplace',  'color' => '#3B6D11', 'active' => true],
     'immigration' => ['label' => 'Immigration', 'color' => '#7c3aed', 'active' => false],
 ];
 ?>

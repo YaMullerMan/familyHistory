@@ -6,14 +6,19 @@ if (!is_user_logged_in()) {
     exit;
 }
 
+$edit_id = isset($_GET['edit']) ? absint($_GET['edit']) : 0;
+if ($edit_id && (get_post_type($edit_id) !== 'fa_media' || !current_user_can('edit_post', $edit_id))) {
+    $edit_id = 0;
+}
+
 get_header();
 ?>
 
 <div class="fa-page fa-add-media">
 
     <div class="fa-form-page-header">
-        <h1>Add media</h1>
-        <p>Upload a photo, document, or other item to the family archive.</p>
+        <h1><?php echo $edit_id ? 'Edit media item' : 'Add media'; ?></h1>
+        <p><?php echo $edit_id ? 'Update this item\'s details.' : 'Upload a photo, document, or other item to the family archive.'; ?></p>
     </div>
 
     <!-- Stepper -->
@@ -34,7 +39,7 @@ get_header();
         </div>
     </div>
 
-    <form id="fa-media-form" novalidate>
+    <form id="fa-media-form" novalidate data-edit-id="<?php echo esc_attr($edit_id); ?>">
 
         <!-- ================================================================
              Step 1 — Upload
@@ -155,7 +160,7 @@ get_header();
         <div class="fa-step-panel" data-step="2" hidden>
             <div class="fa-card">
                 <h2 class="fa-form-section-title">Review &amp; save</h2>
-                <p class="fa-form-hint">Check the details below, then save to add this item to the archive.</p>
+                <p class="fa-form-hint"><?php echo $edit_id ? 'Check the details below, then save your changes.' : 'Check the details below, then save to add this item to the archive.'; ?></p>
                 <div id="fa-review-summary"></div>
                 <div id="fa-submit-success" class="fa-notice fa-notice--success" style="margin-top:1rem;" hidden></div>
             </div>

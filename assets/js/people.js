@@ -47,9 +47,11 @@
             const maiden    = acf.maiden_name ? `<span class="fa-person-row__maiden">née ${esc(acf.maiden_name)}</span>` : '';
             const yrs       = years(p);
             const deceased  = acf.is_living === 0 || acf.is_living === false ? ' fa-person-row--deceased' : '';
-            const thumb     = acf.profile_photo?.sizes?.thumbnail || acf.profile_photo?.url || null;
+            const focal     = /^\d{1,3}% \d{1,3}%$/.test(acf.photo_focal_point || '') ? acf.photo_focal_point : '';
+            const sizes     = acf.profile_photo?.sizes || {};
+            const thumb     = (focal ? sizes.medium : sizes.thumbnail) || acf.profile_photo?.url || null;
             const avatarInner = thumb
-                ? `<img src="${esc(thumb)}" alt="">`
+                ? `<img src="${esc(thumb)}" alt=""${focal ? ` style="object-position:${focal}"` : ''}>`
                 : `<span class="fa-person-row__initials">${esc(initials(p))}</span>`;
 
             return `

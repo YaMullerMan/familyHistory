@@ -8,6 +8,7 @@
  *     nextBtnId:    'fa-next-btn',
  *     stepperId:    'fa-stepper',
  *     counterId:    'fa-step-counter',
+ *     clickableSteps: false,          // true lets stepper items jump to a step
  *     steps: [
  *       {
  *         label:    'Basic info',
@@ -32,6 +33,7 @@ class MultiStepForm {
         this._data        = {};
         this._submitting  = false;
         this._submitLabel = options.submitLabel || 'Save';
+        this._completed   = false;
 
         this._backBtn  = document.getElementById(options.backBtnId  || 'fa-back-btn');
         this._nextBtn  = document.getElementById(options.nextBtnId  || 'fa-next-btn');
@@ -40,6 +42,7 @@ class MultiStepForm {
         this._panels   = [...this.formEl.querySelectorAll('[data-step]')];
 
         this._bindNav();
+        if (options.clickableSteps) this._bindStepper();
         this._render();
     }
 
@@ -49,6 +52,51 @@ class MultiStepForm {
     _bindNav() {
         this._backBtn?.addEventListener('click', () => this.back());
         this._nextBtn?.addEventListener('click', () => this.next());
+    }
+
+    _bindStepper() {
+        if (!this._stepper) return;
+        this._stepper.classList.add('fa-stepper--clickable');
+        this._stepper.querySelectorAll('.fa-stepper__step').forEach((el, i) => {
+            el.setAttribute('role', 'button');
+            el.setAttribute('tabindex', '0');
+            el.addEventListener('click', () => this.goTo(i));
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.goTo(i); }
+            });
+        });
+    }
+
+    // Jump straight to a step. Collects every step's current values; going
+    // forward validates each step passed over and stops at the first problem.
+    goTo(index) {
+        if (this._submitting || this._completed) return;
+        if (index === this._current || index < 0 || index >= this._panels.length) return;
+
+        let target = index;
+        if (index > this._current) {
+            for (let i = this._current; i < index; i++) {
+                const err = this.stepDefs[i]?.validate?.();
+                if (err) {
+                    target = i;
+                    break;
+                }
+            }
+        }
+
+        this.stepDefs.forEach(def => {
+            if (def?.collect) Object.assign(this._data, def.collect());
+        });
+
+        this._clearError();
+        const changed = target !== this._current;
+        this._current = target;
+        this._render();
+        if (changed) this.onStepChange(this._current, this._data);
+
+        if (target !== index) {
+            this._showError(this.stepDefs[target].validate());
+        }
     }
 
     async next() {
@@ -126,6 +174,7 @@ class MultiStepForm {
         }
         try {
             await this.onComplete(this._data);
+            this._completed = true;
         } catch (err) {
             this._showError(err.message || 'Something went wrong. Please try again.');
             if (this._nextBtn) {
